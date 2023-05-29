@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <assert.h>
 #include <bits/stdc++.h>
+
 using namespace std;
 
-bool isValid(unsigned long long num)
+bool isValid(long long num)
 {
-	short prev = -1;
+	long long prev = -1;
 	while(num > 0)
 	{
 		if (num % 10 == prev)
@@ -20,32 +21,30 @@ bool isValid(unsigned long long num)
 	return true;	
 }
 
+void prova(int N, long long num, int M, vector<long long>& solutions)
+{
+    if (isValid(num))
+        solutions.push_back(num%M);
+
+    if (N <= 0)
+        return;
+
+    prova(N - 1, num * 10 + 3, M, solutions);
+    prova(N - 1, num * 10 + 6, M, solutions);
+    prova(N - 1, num * 10 + 9, M, solutions);
+}
 
 long long occulta(int N, int M)
 {
 	// il massimo possibile che posso avere è 9696969696969...N
+	// il minimo è 363636363636...N	
 	
-	unsigned long long max = 0, result = 0, m = 0;
-	for (int i = 0; i < N; i++)
-	{
-		if (i%2 == 0)
-			max = max*10+9;
-		else
-			max = max*10+6;
-	}
-	result = max;
-	m = result % M;
+	// per aggiungere a destra faccio n*10+x
 
-	while (result > 0)
-	{
-		if(isValid(result) && result % M > m)
-		{
-			m = result % M;
-		}
-		result -= 3;
-	}
+	vector<long long> solutions;
+	prova(N, 0, M, solutions);
 
-    return m;
+    return *max_element(solutions.begin(), solutions.end());
 }
 
 
