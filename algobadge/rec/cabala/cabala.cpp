@@ -29,9 +29,14 @@ void prova(int N, long long num, int M, vector<long long>& solutions)
     if (N <= 0)
         return;
 
-    prova(N - 1, num * 10 + 3, M, solutions);
-    prova(N - 1, num * 10 + 6, M, solutions);
-    prova(N - 1, num * 10 + 9, M, solutions);
+	if(isValid(num))
+	{
+		prova(N - 1, num * 10 + 3, M, solutions);
+    	prova(N - 1, num * 10 + 6, M, solutions);
+    	prova(N - 1, num * 10 + 9, M, solutions);
+	}else
+	return;
+
 }
 
 long long occulta(int N, int M)

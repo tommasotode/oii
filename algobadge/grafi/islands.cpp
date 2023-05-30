@@ -17,6 +17,73 @@ int M[MAXN][MAXN];
 
 // isEnd?
 
+bool isIsland(int i, int j)
+{
+	// diventa visitato
+	bool l = false, r = false, u = false, d = false;
+
+	for(int right=j+1; right<R; right++)
+	{
+		if(right == R-1 || M[i][right] == -1)
+		{
+			l=false;
+			break;
+		}
+		if(M[i][right] == 0)
+		{
+			l=true;
+			break;
+		}
+	}
+
+
+	for(int left=j; left>=0; left--)
+	{
+		if(left == 0 || M[i][left] == -1)
+		{
+			l=false;
+			break;
+		}
+		if(M[i][left] == 0)
+		{
+			l=true;
+			break;
+		}
+	}
+
+	for(int down=i+1; down<C; down++)
+	{
+		if(down == C-1 || M[down][j] == -1)
+		{
+			l=false;
+			break;
+		}
+		if(M[down][j] == 0)
+		{
+			l=true;
+			break;
+		}
+	}
+
+
+	for(int up=j; up>=0; up--)
+	{
+		if(up == 0 || M[up][j] == -1)
+		{
+			l=false;
+			break;
+		}
+		if(M[up][j] == 0)
+		{
+			l=true;
+			break;
+		}
+	}
+
+	return l && r && u && d;
+	// prova a destra, prova a sinistra, prova giu e prova su
+}
+
 int main() {
 //  uncomment the following lines if you want to read/write from files
 //  freopen("input.txt", "r", stdin);
@@ -30,15 +97,13 @@ int main() {
 	// insert your code here
 
 	int res = 0;
-	for(int i=0; i<C-1; i++)
+	for(i=0; i<C; i++)
 	{
-		for(int j=0; j<R-1; j++)
+		for(j=0; j<R; j++)
 		{
 			if(M[i][j] == 1)
-			{
-				if((M[i][j+1] == 0 && M[i+1][j] == 0))
+				if(isIsland(i, j))
 					res++;
-			}
 		}
 	}
 
