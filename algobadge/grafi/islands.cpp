@@ -24,26 +24,29 @@ bool isIsland(int i, int j)
 
 	for(int right=j+1; right<R; right++)
 	{
-		if(right == R-1 || M[i][right] == -1)
-		{
-			l=false;
+
+		if(M[i][right] == -1)
 			break;
-		}
+
+		if(M[i][right] == 1)
+			M[i][right] = -1;
+		
 		if(M[i][right] == 0)
 		{
-			l=true;
+			r=true;
 			break;
 		}
 	}
 
-
-	for(int left=j; left>=0; left--)
+	for(int left=j-1; left>=0; left--)
 	{
-		if(left == 0 || M[i][left] == -1)
-		{
-			l=false;
+
+		if(M[i][left] == -1)
 			break;
-		}
+
+		if(M[i][left] == 1)
+			M[left][j] = -1;
+		
 		if(M[i][left] == 0)
 		{
 			l=true;
@@ -53,29 +56,32 @@ bool isIsland(int i, int j)
 
 	for(int down=i+1; down<C; down++)
 	{
-		if(down == C-1 || M[down][j] == -1)
-		{
-			l=false;
+
+		if(M[down][j] == -1)
 			break;
-		}
+
+		if(M[down][j] == 1)
+			M[i][down] = -1;
+		
 		if(M[down][j] == 0)
 		{
-			l=true;
+			d=true;
 			break;
 		}
 	}
 
-
-	for(int up=j; up>=0; up--)
+	for(int up=i-1; up>=0; up--)
 	{
-		if(up == 0 || M[up][j] == -1)
-		{
-			l=false;
+
+		if(M[up][j] == -1)
 			break;
-		}
+
+		if(M[up][j] == 1)
+			M[up][j] = -1;
+		
 		if(M[up][j] == 0)
 		{
-			l=true;
+			u=true;
 			break;
 		}
 	}
@@ -97,9 +103,9 @@ int main() {
 	// insert your code here
 
 	int res = 0;
-	for(i=0; i<C; i++)
+	for(i=1; i<C-1; i++)
 	{
-		for(j=0; j<R; j++)
+		for(j=1; j<R-1; j++)
 		{
 			if(M[i][j] == 1)
 				if(isIsland(i, j))
