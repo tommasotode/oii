@@ -61,13 +61,18 @@ def solve():
 		lampade.addEdge(i, j)
 	
 	a = []
+	maxi = 0
+	index = 0
 	for i in lampade.graph.keys():
 		b = []
 		for j in Z:
 			b.append(lampade.BFS(i, j))
 		a.append(min(b))
+		if min(b) > maxi:
+			maxi = min(b)
+			index = i
 
-	idx = list(lampade.graph.keys()).index(max(a))
+	idx = index
 	num = max(a)
 
 	return (idx, num)
