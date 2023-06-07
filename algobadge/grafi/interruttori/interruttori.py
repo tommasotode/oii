@@ -60,13 +60,15 @@ def solve():
 	for i, j in zip(X, Y):
 		lampade.addEdge(i, j)
 	
-	asd = []
-	for j in Z:
-		for i in lampade.graph.keys():
-			asd.append(lampade.BFS(i, j))
+	a = []
+	for i in lampade.graph.keys():
+		b = []
+		for j in Z:
+			b.append(lampade.BFS(i, j))
+		a.append(min(b))
 
-	idx = 42
-	num = max(asd)
+	idx = list(lampade.graph.keys()).index(max(a))
+	num = max(a)
 
 	return (idx, num)
 
