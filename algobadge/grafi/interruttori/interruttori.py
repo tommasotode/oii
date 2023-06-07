@@ -2,34 +2,74 @@
 # -*- coding: utf8 -*-
 
 import sys
+from collections import defaultdict
 
-# se preferisci leggere e scrivere da file
-# ti basta decommentare le seguenti due righe:
+class Graph:
+	def __init__(self):
+		self.graph = defaultdict(list)
 
-# sys.stdin = open('input.txt')
-# sys.stdout = open('output.txt', 'w')
+	def addEdge(self, u, v):
+		self.graph[u].append(v)
+		self.graph[v].append(u)
+
+	def printGraph(self):
+		for pos in self.graph.keys():
+			print(str(pos) + " -> ", end="")
+			for i in self.graph[pos]:
+				print(str(i) + " -> " , end="")
+
+			print("\n")
+
+	def BFS(self, start, dest):
+		if start == dest:
+			return 1
+		
+		visited = [False] * (max(self.graph) + 1)
+		visited[start] = True
+		queue = []
+		queue.append(start)
+
+		dist = 0
+		while queue:
+			start = queue.pop(0)
+			dist += 1
+			for i in self.graph[start]:
+				if visited[i] == False:
+					queue.append(i)
+					visited[i] = True
+				if i == dest:
+					return dist + 1
+
+
+sys.stdin = open('input.txt')
+sys.stdout = open('output.txt', 'w')
 
 def solve():
-    input()
-    N, A, B = map(int, input().split())
-    Z = [None] * A
-    X = [None] * B
-    Y = [None] * B
+	input()
+	N, A, B = map(int, input().split())
+	Z = [None] * A
+	X = [None] * B
+	Y = [None] * B
 
-    for j in range(A):
-        Z[j] = int(input())
-    for j in range(B):
-        X[j], Y[j] = map(int, input().split())
-    
-    idx = 42 # memorizza qui l'indice della lampadina
-    num = 42 # memorizza qui il numero di interruttori
-    
-    # aggiungi codice...
+	for j in range(A):
+		Z[j] = int(input())
+	for j in range(B):
+		X[j], Y[j] = map(int, input().split())
+	
+	lampade = Graph()
+	for i, j in zip(X, Y):
+		lampade.addEdge(i, j)
+	
+	asd = []
+	for j in Z:
+		for i in lampade.graph.keys():
+			asd.append(lampade.BFS(i, j))
 
-    return (idx, num)
+	idx = 42
+	num = max(asd)
 
+	return (idx, num)
 
 T = int(input())
-
 for t in range(1, T+1):
-    print("Case #{}: {} {}".format(t, *solve()))
+	print("\nCase #{}: {} {}".format(t, *solve()))

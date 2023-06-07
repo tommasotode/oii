@@ -45,3 +45,4 @@ if __name__ == '__main__':
 	g.addEdge(2, 3)
 	g.addEdge(3, 3)
 	g.printGraph()
+	g.BFS(0)
