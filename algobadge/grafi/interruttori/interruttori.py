@@ -20,26 +20,26 @@ class Graph:
 
 			print("\n")
 
-	def BFS(self, start, dest):
-		if start == dest:
-			return 1
+	def BFS(self, start):
 		
-		visited = [False] * (max(self.graph) + 1)
-		visited[start] = True
 		queue = []
 		queue.append(start)
 
-		dist = 0
+		distance = 0
+		dist = []
+		for i in self.graph.keys():
+			dist.append(float('inf'))
+		
 		while queue:
 			start = queue.pop(0)
-			dist += 1
+			distance += 1
+			
 			for i in self.graph[start]:
-				if visited[i] == False:
+				if dist[i] == float('inf'):
+					dist[i] = distance
 					queue.append(i)
-					visited[i] = True
-				if i == dest:
-					return dist + 1
 
+		return dist
 
 sys.stdin = open('input.txt')
 sys.stdout = open('output.txt', 'w')
@@ -61,19 +61,11 @@ def solve():
 		lampade.addEdge(i, j)
 	
 	a = []
-	maxi = 0
-	index = 0
 	for i in lampade.graph.keys():
-		b = []
-		for j in Z:
-			b.append(lampade.BFS(i, j))
-		a.append(min(b))
-		if min(b) > maxi:
-			maxi = min(b)
-			index = i
+		a.append(lampade.BFS(i))
 
-	idx = index
-	num = max(a)
+	idx = 42
+	num = 42
 
 	return (idx, num)
 
