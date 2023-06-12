@@ -3,6 +3,7 @@
 
 import sys
 from collections import defaultdict
+from collections import deque
 
 class Graph:
 	def __init__(self):
@@ -20,26 +21,51 @@ class Graph:
 
 			print("\n")
 
-	def BFS(self, start):
+	def BFS(self, start, Z):
 		
 		queue = []
-		queue.append(start)
-
-		distance = 0
 		dist = []
+		visited = []
 		for i in self.graph.keys():
 			dist.append(float('inf'))
 		
+		queue.append(start)
+		distance = 0
+		dist[0] = 0
+		visited[0] = True
+
 		while queue:
 			start = queue.pop(0)
 			distance += 1
-			
+			#rembember to not take everything, only the numbers in Z, else they are too big
 			for i in self.graph[start]:
 				if dist[i] == float('inf'):
 					dist[i] = distance
 					queue.append(i)
 
 		return dist
+	
+
+	def bfs_distance(self, start, Z):
+
+		visited = set()
+		queue = deque([(start, 0)])
+
+		while queue:
+			current, distance = queue.popleft()
+
+			if current in Z:
+				return distance
+
+			if current not in visited:
+				visited.add(current)
+				neighbors = self.graph[current]
+
+				for neighbor in neighbors:
+					if neighbor not in visited:
+						queue.append((neighbor, distance + 1))
+
+		return -1
 
 sys.stdin = open('input.txt')
 sys.stdout = open('output.txt', 'w')
@@ -60,12 +86,12 @@ def solve():
 	for i, j in zip(X, Y):
 		lampade.addEdge(i, j)
 	
-	a = []
+	tmp = []
 	for i in lampade.graph.keys():
-		a.append(lampade.BFS(i))
+		tmp.append(lampade.bfs_distance(i, Z))
 
-	idx = 42
-	num = 42
+	idx = 0
+	num = max(tmp)
 
 	return (idx, num)
 
