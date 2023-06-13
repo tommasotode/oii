@@ -3,72 +3,45 @@
 
 import sys
 from collections import defaultdict
-from collections import deque
+
+sys.stdin = open('input.txt')
+sys.stdout = open('output.txt', 'w')
 
 class Graph:
-	def __init__(self):
+	def __init__(self, N):
 		self.graph = defaultdict(list)
+		self.N = N
 
 	def addEdge(self, u, v):
 		self.graph[u].append(v)
 		self.graph[v].append(u)
 
-	def printGraph(self):
-		for pos in self.graph.keys():
-			print(str(pos) + " -> ", end="")
-			for i in self.graph[pos]:
-				print(str(i) + " -> " , end="")
-
-			print("\n")
-
 	def BFS(self, start, Z):
-		
 		queue = []
-		dist = []
-		visited = []
-		for i in self.graph.keys():
-			dist.append(float('inf'))
+		dist = [0] * self.N
+		visited = [False] * self.N
 		
 		queue.append(start)
-		distance = 0
-		dist[0] = 0
-		visited[0] = True
+		dist[start] = 0
+		visited[start] = True
 
 		while queue:
-			start = queue.pop(0)
-			distance += 1
-			#rembember to not take everything, only the numbers in Z, else they are too big
-			for i in self.graph[start]:
-				if dist[i] == float('inf'):
-					dist[i] = distance
+			v = queue.pop(0)
+
+			for i in self.graph[v]:
+				if not visited[i]:
+					visited[i] = True
+					dist[i] = dist[v] + 1
 					queue.append(i)
 
-		return dist
-	
-
-	def bfs_distance(self, start, Z):
-
-		visited = set()
-		queue = deque([(start, 0)])
-
-		while queue:
-			current, distance = queue.popleft()
-
-			if current in Z:
-				return distance
-
-			if current not in visited:
-				visited.add(current)
-				neighbors = self.graph[current]
-
-				for neighbor in neighbors:
-					if neighbor not in visited:
-						queue.append((neighbor, distance + 1))
-
-		return -1
-
-sys.stdin = open('input.txt')
-sys.stdout = open('output.txt', 'w')
+		# una volta che ho questa lista, devo ritornare il
+		# valore minimo al suo interno, che sia però anche in Z
+		minval = float('inf')
+		for i, d in enumerate(dist):
+			if i in Z and d < minval:
+				minval = d
+		
+		return (start, minval+1)
 
 def solve():
 	input()
@@ -81,20 +54,29 @@ def solve():
 		Z[j] = int(input())
 	for j in range(B):
 		X[j], Y[j] = map(int, input().split())
-	
-	lampade = Graph()
+
+	lampade = Graph(N)
 	for i, j in zip(X, Y):
 		lampade.addEdge(i, j)
-	
+
 	tmp = []
 	for i in lampade.graph.keys():
-		tmp.append(lampade.bfs_distance(i, Z))
+		tmp.append(lampade.BFS(i, Z))
+	
+	maxdist = 0
+	maxidx = 0
+	for index, distance in tmp:
+		if distance > maxdist:
+			maxdist = distance
+			maxidx = index
 
-	idx = 0
-	num = max(tmp)
+	idx = maxidx
+	num = maxdist
 
 	return (idx, num)
 
+
 T = int(input())
+
 for t in range(1, T+1):
-	print("\nCase #{}: {} {}".format(t, *solve()))
+	print("Case #{}: {} {}".format(t, *solve()))
