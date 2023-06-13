@@ -28,20 +28,16 @@ class Graph:
 		while queue:
 			v = queue.pop(0)
 
+			if v in Z:
+				return (start, dist[v]+1)
+
 			for i in self.graph[v]:
 				if not visited[i]:
 					visited[i] = True
 					dist[i] = dist[v] + 1
 					queue.append(i)
-
-		# una volta che ho questa lista, devo ritornare il
-		# valore minimo al suo interno, che sia però anche in Z
-		minval = float('inf')
-		for i, d in enumerate(dist):
-			if i in Z and d < minval:
-				minval = d
-		
-		return (start, minval+1)
+					
+		return -1
 
 def solve():
 	input()
