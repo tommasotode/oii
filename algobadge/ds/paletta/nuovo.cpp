@@ -1,18 +1,17 @@
 #include <bits/stdc++.h>
 using namespace std;
-long long paletta_sort(int N, int V[]);
 
-int main()
-{
-	int V[] = {2, 3, 4, 1, 0, 7, 6, 5, 8, 9};
-	paletta_sort(10, V);
-	return 0;
-}
+// int main()
+// {
+// 	int V[] = {2, 3, 4, 1, 0, 7, 6, 5, 8, 9};
+// 	paletta_sort(10, V);
+// 	return 0;
+// }
 
-long long mergeA(int V[], int tmpV[], int l, int r, int mid)
+long long int mergeA(int V[], int tmpV[], int l, int r, int mid)
 {
-	int i = l, k = l, j = mid+1;
-	int result = 0;
+	long long int i = l, k = l, j = mid+1;
+	long long int result = 0;
 
 	while (i <= mid && j <= r)
 	{
@@ -53,12 +52,12 @@ long long mergeA(int V[], int tmpV[], int l, int r, int mid)
 	return result;
 }
 
-long long inversions(int V[], int tmpV[], int l, int r)
+long long int inversions(int V[], int tmpV[], int l, int r)
 {
-	long long result = 0;
+	long long int result = 0;
 	if (l < r)
 	{
-		long long mid = (l + r) / 2;
+		long long int mid = (l + r) / 2;
 
 		result = result + inversions(V, tmpV, l, mid);
 		result = result + inversions(V, tmpV, mid+1, r);
@@ -71,16 +70,16 @@ long long inversions(int V[], int tmpV[], int l, int r)
 
 long long paletta_sort(int N, int V[])
 {
-	int result = 0;
+	long long int result = 0;
 
-	int pari = (N + 1) / 2, dispari = N / 2;
+	long long int pari = (N + 1) / 2, dispari = N / 2;
 
 	int Vpari[pari];
 	int Vdispari[dispari];
 
-	int p = 0, d = 0;
+	long long int p = 0, d = 0;
 
-	for (int i = 0; i < N; i++)
+	for (long long int i = 0; i < N; i++)
 	{
 		if (i % 2 == 0)
 		{

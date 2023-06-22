@@ -4,6 +4,8 @@
 
 static FILE *fr, *fw;
 
+#define EVAL
+
 // Declaring variables
 static int N;
 static int* V;
