@@ -52,7 +52,17 @@ def merge(arr, temp, left, mid, right):
 	return inversions
 
 
-arr = [2, 3, 0, 5, 4, 1]
-n = len(arr)
-result = mergeSort(arr, n)
-print("Number of inversions is", result)
+arr = [2, 3, 4, 1, 0, 7, 6, 5, 8, 9]
+
+arr1 = []
+arr2 = []
+for i in range(len(arr)):
+	if i % 2 == 0:
+		arr1.append(arr[i])
+	else:
+		arr2.append(arr[i])
+
+result1 = mergeSort(arr1, len(arr1))
+result2 = mergeSort(arr2, len(arr2))
+
+print("Number of inversions is", result1+result2)
