@@ -16,84 +16,95 @@ class SegmentTree
 		int n;
 		vector<int> tree;
 		function<int(int, int)> func;
+		Node root;
 
-		void build(vector<int>& data, int node, int l_tr, int r_tr)
+		void build(vector<int>& data, Node node)
 		{
-			if (l_tr == r_tr)
-				tree[node] = data[l_tr]; // caso base
+			if (node.left == node.right)
+				tree[node.index] = data[node.left]; // caso base
 			else
 			{
-				int mid_seg = (l_tr + r_tr) / 2;
-				build(data, node*2, l_tr, mid_seg);
-				build(data, node*2 + 1, mid_seg + 1, r_tr);
+				int mid = (node.left + node.right) / 2;
+
+				Node left = {node.index*2, node.left, mid};
+				Node right = {node.index*2 + 1, mid + 1, node.right};
+				build(data, left);
+				build(data, right);
 				
-				tree[node] = func(tree[node*2], tree[node*2 + 1]);
+				tree[node.index] = func(tree[node.index*2], tree[node.index*2 + 1]);
 			}
 		}
 
-		int query(int node, int l_tr, int r_tr, int l, int r)
+		int query(Node node, int l, int r)
 		{
 			if (l > r) 
 				return INT_MIN;
 			
-			if (l_tr == l && r_tr == r)
-				return tree[node];
+			if (node.left == l && node.right == r)
+				return tree[node.index];
 
-			int mid_tr = (l_tr + r_tr) / 2;
+			int mid = (node.left + node.right) / 2;
 
-			int left = query(node*2, l_tr, mid_tr, l, min(r, mid_tr));
-			int right = query(node*2 + 1, mid_tr + 1, r_tr, max(l, mid_tr + 1), r);
+			Node left = {node.index*2, node.left, mid};
+			Node right = {node.index*2 + 1, mid + 1, node.right};
 
-			return func(left, right);
+			int tmp_l = query(left, l, min(r, mid));
+			int tmp_r = query(right, max(l, mid + 1), r);
+
+			return func(tmp_l, tmp_r);
 		}
 
-		void update(int node, int l_tr, int r_tr, int pos, int val)
+		void update(Node node, int pos, int val)
 		{
-			if (l_tr == r_tr)
-				tree[node] = val; // caso base
+			if (node.left == node.right)
+				tree[node.index] = val; // caso base
 				
 			else 
 			{
-				int mid_tr = (l_tr + r_tr) / 2;
+				int mid = (node.left + node.right) / 2;
 				
-				if (pos <= mid_tr)
-					update(node*2, l_tr, mid_tr, pos, val);
+				Node left = {node.index*2, node.left, mid};
+				Node right = {node.index*2 + 1, mid + 1, node.right};
+
+				if (pos <= mid)
+					update(left, pos, val);
 				else
-					update(node*2 + 1, mid_tr + 1, r_tr, pos, val);
+					update(right, pos, val);
 				
-				tree[node] = func(tree[node*2], tree[node*2 + 1]);
+				tree[node.index] = func(tree[node.index*2], tree[node.index*2 + 1]);
 			}
 		}
 
-		int first_greater(int node, int l_node, int r_node, int l, int r, int val)
+		int first_greater(Node node, int l, int r, int val)
 		{
-			if(l_node > r || r_node < l)
+			if(node.left > r || node.right < l)
 				return -1;
 			
-			if(l_node >= l && r_node <= r)
+			if(node.left >= l && node.right <= r)
 			{
-				if(tree[node] <= val)
+				if(tree[node.index] <= val)
 					return -1;
 				
-				while(l_node != r_node)
+				while(node.left != node.right)
 				{
-					int mid = l_node + (( r_node - l_node ) / 2);
+					int mid = node.left + (( node.right - node.left ) / 2);
 					
-					node = (tree[node*2] > val) ? node*2 : node*2 + 1;
-					r_node = (tree[node*2] > val) ? mid : r_node;
-					l_node = (tree[node*2] > val) ? l_node : mid + 1;
+					node.index = (tree[node.index*2] > val) ? node.index*2 : node.index*2 + 1;
+					node.right = (tree[node.index*2] > val) ? mid : node.right;
+					node.left = (tree[node.index*2] > val) ? node.left : mid + 1;
 				}
-
-				return l_node;
+				return node.left;
 			}
 
-			int mid = l_node + (r_node-l_node) / 2;
+			int mid = node.left + (node.right - node.left) / 2;
 			
-			int result = first_greater(node*2, l_node, mid, l, r, val);
+			Node left = {node.index*2, node.left, mid};
+			Node right = {node.index*2, mid + 1, node.right};
+			int result = first_greater(left, l, r, val);
 			if(result != -1)
 				return result;
 
-			return first_greater(node*2 + 1, mid + 1, r_node, l ,r, val);
+			return first_greater(right, l , r, val);
 		}
 
 	public:
@@ -102,17 +113,23 @@ class SegmentTree
 			n = data.size();
 			tree.resize(n*4);
 			func = query;
-			build(data, 1, 0, n-1);
+			root = {1, 0, n-1};
+			build(data, root);
 		}
 
 		int query(int l, int r)
 		{
-			return query(1, 0, n-1, l, r);
+			return query(root, l, r);
 		}
 
 		void update(int pos, int val)
 		{
-			update(1, 0, n-1, pos, val);
+			update(root, pos, val);
+		}
+
+		int first_greater(int l, int r, int val)
+		{
+			return first_greater(root, l, r, val);
 		}
 };
 
@@ -126,7 +143,9 @@ int main()
 	SegmentTree s = SegmentTree(tmp, [](int x, int y) -> int { return max(x, y); });
 
 	int m = s.query(l, r);
-	cout << m << endl;
+
+	int ciaociao = s.first_greater(l, r, 2);
+	cout << ciaociao << endl;
 
 	return 0;
 }
