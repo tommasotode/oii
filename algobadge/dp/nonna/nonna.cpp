@@ -1,55 +1,41 @@
 #include <stdio.h>
 #include <assert.h>
+#include <limits>
 #include <bits/stdc++.h>
 using namespace std;
 
-#define MAXN 5000
-#define MAXK 5000
+#define MAXN 5000 + 1
+#define MAXK 5000 + 1
 #define MAXP 1000000
 
-int trovaSomme(int subset[], int start, int end, int somma, vector<int> somme)
-{
-    if (start > end)
-	{
-		somme.push_back(somma);
-        return *min_element(somme.begin(), somme.end());
-    }
- 
-    return trovaSomme(subset, start + 1, end, somma + subset[start], somme);
-    return trovaSomme(subset, start + 1, end, somma, somme);
-}
+int lookup[MAXN][MAXK];
+int P[MAXN];
+int inf = MAXP + 1;
 
-int solve(int start, int end, int P[], int K, vector<int> soluzioni, int N)
+int knapsack(int n, int k, int N)
 {
-	vector<int> somme;
-	int somma = trovaSomme(P, start, end, 0, somme);
-	if(start > end || end >= N)
-	{
-		return (int)*min_element(soluzioni.begin(), soluzioni.end());
-	}
-	if(somma >= K)
-	{
-		soluzioni.push_back(somma);
-		return solve(start+1, end, P, K, soluzioni, N);
-	}
-	else
-	{		
-		return solve(start, end+1, P, K, soluzioni, N);
-	}
+	if (k <= 0)
+		return 0;
 
-	int a = (int)*min_element(soluzioni.begin(), soluzioni.end());
-	return a;
+	if (n >= N)
+		return inf;
+
+	if (lookup[n][k] != -1)
+		return lookup[n][k];
+
+	int included = P[n] + knapsack(n+1, k-P[n], N);
+	int notIncluded = knapsack(n+1, k, N);
+
+	int tmp = min(included, notIncluded);
+	lookup[n][k] = tmp;
+
+	return tmp;
 }
 
 int mangia(int N, int K, int P[])
 {
-	sort(P, P+N);
-	vector<int> soluz;
-	int sol = solve(0, 0, P, K, soluz, N);
-	return sol;
+	return knapsack(0, K, N);
 }
-
-int P[MAXN];
 
 int main()
 {
@@ -61,7 +47,13 @@ int main()
 	assert(2 == fscanf(fr, "%d %d", &N, &K));
 	for(i=0; i<N; i++)
 		assert(1 == fscanf(fr, "%d", &P[i]));
-
+	
+	for (int i = 0; i < MAXN; i++)
+	{
+		for (int j = 0; j < MAXK; j++)
+			lookup[i][j] = -1;
+	}
+	
 	fprintf(fw, "%d\n", mangia(N, K, P));
 	fclose(fr);
 	fclose(fw);

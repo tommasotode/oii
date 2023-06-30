@@ -21,15 +21,12 @@ int accoppia(int turisti, int guide, vector<int> &V, vector<int> &G)
 		return turisti * 1;
 
 	int guida = accoppia(turisti, guide - 1, V, G);
-
 	int turista = accoppia(turisti - 1, guide, V, G) + 1;
-
 	int entrambi = 0;
 	if (G[guide] > V[turisti])
 		entrambi = accoppia(turisti - 1, guide - 1, V, G) + 2;
 
 	int tmp = max(max(turista, entrambi), guida);
-	
 	lookup[turisti][guide] = tmp;
 	return tmp;
 }
@@ -38,7 +35,6 @@ int solve()
 {
 	int N, M;
 	cin >> N >> M;
-
 	vector<int> V(N), G(M);
 
 	for (int i=0; i<N; i++)
@@ -49,7 +45,6 @@ int solve()
 	V.insert(V.begin(), 0);
 	G.insert(G.begin(), 0);
 	int risposta = accoppia(N, M, V, G);
-
 	return risposta;
 }
 
@@ -63,7 +58,6 @@ int main()
 
 	for (t = 1; t <= T; t++)
 	{
-	
 		for (int i = 0; i < MAXN; i++)
 			for (int j = 0; j < MAXM; j++)
 				lookup[i][j] = -1;

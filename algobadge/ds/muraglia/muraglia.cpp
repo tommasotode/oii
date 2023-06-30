@@ -15,8 +15,8 @@ class SegmentTree
 {
 	private:
 		vector<int> tree;
-		function<int(int, int)> func;
 		Node root;
+		function<int(int, int)> func;
 
 		void build(vector<int>& data, Node node)
 		{
@@ -147,9 +147,9 @@ class SegmentTree
 		}
 		
 	public:
-		int n;
 		vector<int> d;
-		
+		int n;
+
 		SegmentTree()
 		{
 		}
@@ -157,16 +157,11 @@ class SegmentTree
 		SegmentTree(vector<int>& data, function<int(int, int)> query)
 		{
 			n = data.size();
-			d = data;
 			tree.resize(n*4);
+			d = data;
 			func = query;
 			root = {1, 0, n-1};
 			build(data, root);
-		}
-
-		int query(int l, int r)
-		{
-			return query(root, l, r);
 		}
 
 		void update(int pos, int val)
@@ -185,10 +180,7 @@ class SegmentTree
 		}
 };
 
-
-
 SegmentTree st;
-
 void inizializza(int N, vector<int> H)
 {
 	st = SegmentTree(H, [](int x, int y) -> int { return max(x, y); });
