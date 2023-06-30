@@ -2,7 +2,7 @@
 
 import sys
 
-sys.stdin = open('newlines_input_1.txt')
+sys.stdin = open('input.txt')
 sys.stdout = open('output.txt', 'w')
 
 def max_group(arr):
@@ -14,9 +14,10 @@ def max_group(arr):
 			curr = 0
 		else:
 			curr = curr + i + 1
+
 	groups.append(curr)
 	
-	return max(groups) -1
+	return max(groups) - 1
 
 def max_line(arr):
 	curr = 0
@@ -29,15 +30,12 @@ def max_line(arr):
 		else:
 			curr = curr + elem + 1
 	
-	return min(groups) -1
+	return min(groups) - 1
 	
 def solve(t):
 	input()
 	N = int(input().strip())
-	W = list(map(int, input().strip().split()))
-	
-	# per il minore basta prendere il gruppo più grande
-	# per il maggiore il più piccolo di tutti quelli sommati all'indice di -1 + 1
+	W = list(map(int, input().strip().split()))	
 
 	K1 = max_group(W)
 	K2 = max_line(W)

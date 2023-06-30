@@ -2,7 +2,7 @@
 
 import sys
 
-sys.stdin = open('rettangolo_input_1.txt')
+sys.stdin = open('input.txt')
 sys.stdout = open('output.txt', 'w')
 
 def count(array, element):
@@ -23,8 +23,6 @@ def solve(t):
 	x = [x1, x2, x3]
 	y = [y1, y2, y3]
 	
-	# conto il numero di elementi in verticale, 
-	# se sono due l'unico rimasto va messo nel risultato
 	x4 = 42
 	y4 = 42
 
