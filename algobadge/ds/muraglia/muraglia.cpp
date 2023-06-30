@@ -1,118 +1,276 @@
 #include <utility>
 #include <vector>
-#include <bits/stdc++.h>
 #include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-vector<int> muri;
+typedef struct Node
+{
+	int index;
+	int left;
+	int right;
+} Node;
+
+class SegmentTree
+{
+	private:
+		vector<int> tree;
+		function<int(int, int)> func;
+		Node root;
+
+		void build(vector<int>& data, Node node)
+		{
+			if (node.left == node.right)	// caso base
+				tree[node.index] = data[node.left];
+			else
+			{
+				int mid = (node.left + node.right) / 2;
+				Node left = {node.index*2, node.left, mid};
+				Node right = {node.index*2 + 1, mid + 1, node.right};
+				
+				build(data, left);
+				build(data, right);
+				tree[node.index] = func(tree[node.index*2], tree[node.index*2 + 1]);
+			}
+		}
+
+		int query(Node node, int l, int r)
+		{
+			if (l > r)	// caso base (minimo in questo caso)
+				return INT_MIN;	// da cambiare in base alla query
+			
+			if (node.left == l && node.right == r)	// caso base definitivo
+				return tree[node.index];	// quando rientra completamente nel range
+
+			int mid = (node.left + node.right) / 2;
+			Node left = {node.index*2, node.left, mid};
+			Node right = {node.index*2 + 1, mid + 1, node.right};
+
+			int end = min(r, mid), start = max(l, mid + 1);
+			int tmp_l = query(left, l, end);
+			int tmp_r = query(right, start, r);
+
+			return func(tmp_l, tmp_r);
+		}
+
+		void update(Node node, int pos, int val)
+		{
+			if (node.left == node.right)	// caso base
+				tree[node.index] = val;
+			else 
+			{
+				int mid = (node.left + node.right) / 2;
+				Node left = {node.index*2, node.left, mid};
+				Node right = {node.index*2 + 1, mid + 1, node.right};
+
+				if (pos <= mid)
+					update(left, pos, val);
+				else
+					update(right, pos, val);
+				
+				tree[node.index] = func(tree[node.index*2], tree[node.index*2 + 1]);
+			}
+		}
+
+		int first_greater(Node node, int l, int r, int val)
+		{
+			if(node.left > r || node.right < l)
+				return -1;
+			
+			if(node.left >= l && node.right <= r)
+			{
+				if(tree[node.index] <= val)
+					return -1;
+				
+				while(node.left != node.right)
+				{
+					int mid = node.left + (( node.right - node.left ) / 2);
+					if(tree[node.index*2] > val)
+					{
+						node.index = node.index*2;
+						node.right = mid;
+					}
+					else
+					{
+						node.index = node.index*2 + 1;
+						node.left = mid + 1;
+					}
+				}
+				return node.left;
+			}
+			int mid = node.left + (node.right - node.left) / 2;
+			Node left = {node.index*2, node.left, mid};
+			Node right = {node.index*2 + 1, mid + 1, node.right};
+			
+			int result = first_greater(left, l, r, val);
+			if(result != -1)
+				return result;
+			return first_greater(right, l , r, val);
+		}
+
+		int asd(Node node, int l, int r, int val)
+		{
+			if(node.left > r || node.right < l)
+				return -1;
+			
+			if(node.left >= l && node.right <= r)
+			{
+				if(tree[node.index] <= val)
+					return -1;
+				
+				while(node.left != node.right)
+				{
+					int mid = node.left + (( node.right - node.left ) / 2);
+					if(tree[node.index*2 + 1] > val)
+					{
+						node.index = node.index*2 + 1;
+						node.left = mid + 1;
+					}
+					else
+					{
+						node.index = node.index*2;
+						node.right = mid;
+					}
+				}
+				return node.left;
+			}
+			int mid = node.left + (node.right - node.left) / 2;
+			Node left = {node.index*2 + 1, mid + 1, node.right};
+			Node right = {node.index*2, node.left, mid};
+			
+			int result = first_greater(left, l, r, val);
+			if(result != -1)
+				return result;
+			return first_greater(right, l , r, val);
+		}
+
+
+	public:
+		int n;
+		vector<int> d;
+		
+		SegmentTree()
+		{
+		}
+
+		SegmentTree(vector<int>& data, function<int(int, int)> query)
+		{
+			n = data.size();
+			d = data;
+			tree.resize(n*4);
+			func = query;
+			root = {1, 0, n-1};
+			build(data, root);
+		}
+
+		int query(int l, int r)
+		{
+			return query(root, l, r);
+		}
+
+		void update(int pos, int val)
+		{
+			update(root, pos, val);
+		}
+
+		int first_greater(int l, int r, int val)
+		{
+			return first_greater(root, l, r, val);
+		}
+
+		int asd(int l, int r, int val)
+		{
+			return asd(root, l, r, val);
+		}
+};
+
+SegmentTree st;
 
 void inizializza(int N, vector<int> H)
 {
-	muri = vector<int>(N);
-	
-	for (int i = 0; i < H.size(); i++)
-	{
-		muri[i] = H[i];
-	}	
+	st = SegmentTree(H, [](int x, int y) -> int { return max(x, y); });
 	return;
 }
 
 pair<int, int> chiedi(int x)
 {
-	int left = x;
-	int right = x;
-	
-	for (int i = x; i < muri.size(); i++)
-	{
-		if (muri[i] > muri[x] || i == muri.size()-1)
-		{
-			right = i;
-			break;
-		}
-	}
+	int l = 0;
+	int r = 0;
+	r = st.first_greater(x, st.n-1, st.d[x]);
+	if (r == -1)
+		r = st.n-1;
 
-	for (int j = x; j >= 0; j--)
-	{
-		if (muri[j] > muri[x] || j == 0)
-		{
-			left = j;
-			break;
-		}	
-	}
-	
-	return {left, right};
+	l = st.asd(0, x, st.d[x]);
+	return {l, r};
 }
 
 void cambia(int x, int h)
 {
-	muri[x] = h;
+	st.update(x, h);
+	st.d[x] = h;
 	return;
 }
 
 
 
+static int R;
+static vector<int> risultato1;
+static vector<int> risultato2;
+
+void inizializza(int N, vector<int> H);
+
+pair<int, int> chiedi(int x);
+void cambia(int x, int h);
+
+void leggi_eventi(int M)
+{
+	for (int i = 0; i < M; i++)
+	{
+		char tipo;
+		cin >> tipo;
+
+		if (tipo == 'Q')
+		{
+			int x;
+			cin >> x;
+			pair<int, int> risultato = chiedi(x);
+			risultato1[R] = risultato.first;
+			risultato2[R] = risultato.second;
+			R++;
+		}
+		else
+		{
+			int x, h;
+			cin >> x >> h;
+			cambia(x, h);
+		}
+	}
+}
 
 
+int main()
+{
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+	int N, M;
+	cin >> N >> M;
 
+	vector<int> H(N);
+	risultato1.resize(M);
+	risultato2.resize(M);
 
-// static int R;
-// static vector<int> risultato1;
-// static vector<int> risultato2;
-
-// void inizializza(int N, vector<int> H);
-
-// pair<int, int> chiedi(int x);
-// void cambia(int x, int h);
-
-// void leggi_eventi(int M)
-// {
-// 	for (int i = 0; i < M; i++)
-// 	{
-// 		char tipo;
-// 		cin >> tipo;
-
-// 		if (tipo == 'Q')
-// 		{
-// 			int x;
-// 			cin >> x;
-// 			pair<int, int> risultato = chiedi(x);
-// 			risultato1[R] = risultato.first;
-// 			risultato2[R] = risultato.second;
-// 			R++;
-// 		}
-// 		else
-// 		{
-// 			int x, h;
-// 			cin >> x >> h;
-// 			cambia(x, h);
-// 		}
-// 	}
-// }
-
-
-// int main()
-// {
-//     freopen("input.txt", "r", stdin);
-//     freopen("output.txt", "w", stdout);
-// 	int N, M;
-// 	cin >> N >> M;
-
-// 	vector<int> H(N);
-// 	risultato1.resize(M);
-// 	risultato2.resize(M);
-
-// 	for (int i = 0; i < N; i++)
-// 	{
-// 		cin >> H[i];
-// 	}
+	for (int i = 0; i < N; i++)
+	{
+		cin >> H[i];
+	}
 	
-// 	inizializza(N, H);
-// 	leggi_eventi(M);
+	inizializza(N, H);
+	leggi_eventi(M);
 
-// 	for (int i = 0; i < R; i++)
-// 	{
-// 		cout << risultato1[i] << ' ' << risultato2[i] << '\n';
-// 	}
+	for (int i = 0; i < R; i++)
+	{
+		cout << risultato1[i] << ' ' << risultato2[i] << '\n';
+	}
 
-// 	return 0;
-// }
+	return 0;
+}
