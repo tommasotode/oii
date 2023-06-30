@@ -20,7 +20,7 @@ class SegmentTree
 
 		void build(vector<int>& data, Node node)
 		{
-			if (node.left == node.right)	// caso base
+			if (node.left == node.right)
 				tree[node.index] = data[node.left];
 			else
 			{
@@ -36,11 +36,11 @@ class SegmentTree
 
 		int query(Node node, int l, int r)
 		{
-			if (l > r)	// caso base (minimo in questo caso)
+			if (l > r)
 				return INT_MIN;	// da cambiare in base alla query
 			
-			if (node.left == l && node.right == r)	// caso base definitivo
-				return tree[node.index];	// quando rientra completamente nel range
+			if (node.left == l && node.right == r)
+				return tree[node.index];
 
 			int mid = (node.left + node.right) / 2;
 			Node left = {node.index*2, node.left, mid};
@@ -55,7 +55,7 @@ class SegmentTree
 
 		void update(Node node, int pos, int val)
 		{
-			if (node.left == node.right)	// caso base
+			if (node.left == node.right)
 				tree[node.index] = val;
 			else 
 			{
@@ -98,6 +98,7 @@ class SegmentTree
 				}
 				return node.left;
 			}
+			
 			int mid = node.left + (node.right - node.left) / 2;
 			Node left = {node.index*2, node.left, mid};
 			Node right = {node.index*2 + 1, mid + 1, node.right};
@@ -107,8 +108,8 @@ class SegmentTree
 				return result;
 			return first_greater(right, l , r, val);
 		}
-
-		int asd(Node node, int l, int r, int val)
+		
+		int last_greater(Node node, int l, int r, int val)
 		{
 			if(node.left > r || node.right < l)
 				return -1;
@@ -134,17 +135,17 @@ class SegmentTree
 				}
 				return node.left;
 			}
-			int mid = node.left + (node.right - node.left) / 2;
-			Node left = {node.index*2 + 1, mid + 1, node.right};
-			Node right = {node.index*2, node.left, mid};
 			
-			int result = first_greater(left, l, r, val);
+			int mid = node.left + (node.right - node.left) / 2;
+			Node left = {node.index*2, node.left, mid};
+			Node right = {node.index*2 + 1, mid + 1, node.right};
+			
+			int result = last_greater(right, l, r, val);
 			if(result != -1)
 				return result;
-			return first_greater(right, l , r, val);
+			return last_greater(left, l , r, val);
 		}
-
-
+		
 	public:
 		int n;
 		vector<int> d;
@@ -178,11 +179,13 @@ class SegmentTree
 			return first_greater(root, l, r, val);
 		}
 
-		int asd(int l, int r, int val)
+		int last_greater(int l, int r, int val)
 		{
-			return asd(root, l, r, val);
+			return last_greater(root, l, r, val);
 		}
 };
+
+
 
 SegmentTree st;
 
@@ -194,13 +197,14 @@ void inizializza(int N, vector<int> H)
 
 pair<int, int> chiedi(int x)
 {
-	int l = 0;
-	int r = 0;
-	r = st.first_greater(x, st.n-1, st.d[x]);
+	int l = st.last_greater(0, x, st.d[x]);
+	if (l == -1)
+		l = 0;
+	
+	int r = st.first_greater(x, st.n-1, st.d[x]);
 	if (r == -1)
 		r = st.n-1;
 
-	l = st.asd(0, x, st.d[x]);
 	return {l, r};
 }
 
@@ -209,68 +213,4 @@ void cambia(int x, int h)
 	st.update(x, h);
 	st.d[x] = h;
 	return;
-}
-
-
-
-static int R;
-static vector<int> risultato1;
-static vector<int> risultato2;
-
-void inizializza(int N, vector<int> H);
-
-pair<int, int> chiedi(int x);
-void cambia(int x, int h);
-
-void leggi_eventi(int M)
-{
-	for (int i = 0; i < M; i++)
-	{
-		char tipo;
-		cin >> tipo;
-
-		if (tipo == 'Q')
-		{
-			int x;
-			cin >> x;
-			pair<int, int> risultato = chiedi(x);
-			risultato1[R] = risultato.first;
-			risultato2[R] = risultato.second;
-			R++;
-		}
-		else
-		{
-			int x, h;
-			cin >> x >> h;
-			cambia(x, h);
-		}
-	}
-}
-
-
-int main()
-{
-	freopen("input.txt", "r", stdin);
-	freopen("output.txt", "w", stdout);
-	int N, M;
-	cin >> N >> M;
-
-	vector<int> H(N);
-	risultato1.resize(M);
-	risultato2.resize(M);
-
-	for (int i = 0; i < N; i++)
-	{
-		cin >> H[i];
-	}
-	
-	inizializza(N, H);
-	leggi_eventi(M);
-
-	for (int i = 0; i < R; i++)
-	{
-		cout << risultato1[i] << ' ' << risultato2[i] << '\n';
-	}
-
-	return 0;
 }
