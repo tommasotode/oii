@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
-#include <bits/stdc++.h>
 #include <limits>
+#include <bits/stdc++.h>
 using namespace std;
 
 int quadri(int N, long long M, int V[])
@@ -10,13 +10,13 @@ int quadri(int N, long long M, int V[])
 	long long somma = 0;
 	int inizio = 0;
 
-	for(int fine=0; fine<N; fine++)
+	for (int fine = 0; fine < N; fine++)
 	{
-		if(V[fine] > M)
+		if (V[fine] > M)
 			return 0;
 		
 		somma = somma + V[fine];
-		while(fine > inizio && somma > M)
+		while (fine > inizio && somma > M)
 		{
 			somma = somma - V[inizio];
 			inizio++;

@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
-set<long long> lista;
+
+set<long long> autogrill;
 
 void inizia()
 {
@@ -9,36 +10,35 @@ void inizia()
 
 void apri(long long p)
 {
-	lista.insert(p);
+	autogrill.insert(p);
 	return;	
 }
 
 void chiudi(long long p)
 {
-	lista.erase(p);
+	autogrill.erase(p);
 	return;
 }
 
 long long chiedi(long long p)
 {
-	if(lista.empty()) return -1;
+	if (autogrill.empty())
+		return -1;
 	
-	if(p < *lista.begin())
-		return *lista.begin();
+	if (p < *autogrill.begin())
+		return *autogrill.begin();
 
-	if(p > *--lista.end())
-		return *--lista.end();
+	if (p > *--autogrill.end())
+		return *--autogrill.end();
 
-	set<long long>::iterator big = lista.upper_bound(p);
-	set<long long>::iterator small = lista.lower_bound(p);
+	set<long long>::iterator up = autogrill.upper_bound(p);
+	set<long long>::iterator down = autogrill.lower_bound(p);
 
-	if(*small != p)
-		small--;
+	if (*down != p)
+		down--;
 
-	if(abs(p - *small) >= abs(p - *big))
-	{
-		return *big;
-	}
+	if (abs(p - *down) >= abs(p - *up))
+		return *up;
 
-	return *small;
+	return *down;
 }

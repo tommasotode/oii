@@ -6,17 +6,17 @@
 int compra(int N, int M, int A, int B)
 {
 	int result = -1;
-	if(N <= M)
+	if (N <= M)
 	{
-		if(B > N*A)
+		if (B > N*A)
 			result = N*A;
 		else
 			result = B;
 	}
-	if(N%M == 0)
-		result = ((N/M) * B); 
+	if (N % M == 0)
+		result = ( (N/M)*B ); 
 	else
-		result = MIN((N/M * B) + B, ((N/M)*B)+(N%M)*A);
+		result = MIN( ((N/M)*B) + B, ((N/M)*B) + ((N%M)*A) );
 	
 	return MIN(result, A*N);
 }

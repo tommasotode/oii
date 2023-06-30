@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
 //euclide
@@ -7,23 +8,21 @@ int mcd(int n1, int n2)
 {
 	if(n1 == 0)
 		return n2;
+		
 	return mcd(n2 % n1, n1);
 }
 
-long long int solve()
+long long solve()
 {
 	int N;
 	cin >> N;
 	vector<int> V(N);
 	for(int &x: V)
-	{
 		cin >> x;
-	}
-	long long int risposta = V[0];
+		
+	long long risposta = V[0];
 	for(int i=1; i<N; i++)
-	{
 		risposta = (V[i] * risposta) / mcd(V[i], risposta);
-	}
 
 	return risposta;
 }
@@ -31,7 +30,7 @@ long long int solve()
 int main()
 {
 	freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
+	freopen("output.txt", "w", stdout);
 	
 	int T;
 	cin >> T;
