@@ -2,38 +2,31 @@
 #include <assert.h>
 #include <bits/stdc++.h>
 
-#define MAXN 5000
+#define MAXN 5000 + 1
 using namespace std;
 
 int N, X, i;
 int P[MAXN], Q[MAXN];
 
-int dp[MAXN][MAXN][MAXN];
+unsigned int dp[MAXN][10000 + 1];
 
-int solve(int ix, int X, int N)
+unsigned int solve(int ix, int X, int N)
 {
     if (ix >= N)
         return 0;
 
-    if (dp[ix][N][X] != -1)
-    {
-        return dp[ix][N][X];
-    }
+    if (dp[ix][X] != -1)
+        return dp[ix][X];
 
-    // con
-    int included = 0;
+    unsigned int included = 0;
     if (X - Q[ix] >= 0)
         included = P[ix] + solve(ix+1, X-Q[ix], N);
 
-    // senza
-    int notIncluded = solve(ix+1, X, N);
-
-    int r = max(included, notIncluded);
-    dp[ix][N][X]= r;
+    unsigned int r = max(included, solve(ix+1, X, N));
+    dp[ix][X] = r;
 
     return r;
 }
-
 
 int main()
 {
@@ -44,16 +37,15 @@ int main()
     for(i=0; i<N; i++)
         assert(2 == scanf("%d %d", &P[i], &Q[i]));
 
-    for (int j = 0; j < MAXN; j++)
+
+    for (int a = 0; a < MAXN; a++)
     {
-        for (int k = 0; k < MAXN; k++)
+        for (int b = 0; b < MAXN; b++)
         {
-            for (int asd = 0; asd < MAXN; asd++)
-            {
-                dp[j][k][asd] = -1;
-            }
+            dp[a][b] = -1;
         }
     }
+
     int i = solve(0, X, N);
 
     printf("%d\n", i);
