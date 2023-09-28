@@ -3,7 +3,6 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-
 long long V[15];
 
 int main() {
@@ -14,43 +13,37 @@ int main() {
 
 	long long s = 0;
 	for (long long i = 0; i < 15; i++)
-	{
 		s += V[i] * prices[i];
-	}
 	
 	reverse(prices.begin(), prices.end());
 	vector<long long> sol = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-
 	long long tmp_s = 0;
 	for (int mi = 0; mi < prices.size(); mi++)
 	{
-        while( (tmp_s + (prices[mi] * 32)) <= s )
-        {
-            tmp_s += (prices[mi] * 32);
-            sol[14-mi] += 32;
-        }
+		while( (tmp_s + (prices[mi] * 32)) <= s )
+		{
+			tmp_s += (prices[mi] * 32);
+			sol[14-mi] += 32;
+		}
 
-        while( (tmp_s + (prices[mi] * 16)) <= s )
-        {
-            tmp_s += (prices[mi] * 16);
-            sol[14-mi] += 16;
-        }
-
-
-       while( (tmp_s + (prices[mi] * 8)) <= s )
-        {
-            tmp_s += (prices[mi] * 8);
-            sol[14-mi] += 8;
-        }
+		while( (tmp_s + (prices[mi] * 16)) <= s )
+		{
+			tmp_s += (prices[mi] * 16);
+			sol[14-mi] += 16;
+		}
 		
-		
+	   while( (tmp_s + (prices[mi] * 8)) <= s )
+		{
+			tmp_s += (prices[mi] * 8);
+			sol[14-mi] += 8;
+		}
+
 		while( (tmp_s + (prices[mi] * 4)) <= s )
-        {
-            tmp_s += (prices[mi] * 4);
-            sol[14-mi] += 4;
-        }
-		
+		{
+			tmp_s += (prices[mi] * 4);
+			sol[14-mi] += 4;
+		}	
 		
 		while( (tmp_s + (prices[mi] * 2)) <= s )
 		{
@@ -64,7 +57,6 @@ int main() {
 			sol[14-mi] += 1;
 		}
 	}
-
 
 	for (int i = 0; i < 15; i++)
 		cout << sol[i] << " ";
