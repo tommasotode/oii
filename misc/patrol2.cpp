@@ -26,15 +26,9 @@ public:
 	int BFS(int exit, vector<int> policepath)
 	{
 		queue<int> queue;
-		bool visited[N];
-		int distance[N];
+		vector<bool> visited(N, false);
+		vector<int> distance(N, INT_MAX);		
 		int min_path = INT_MAX;
-
-		for (int i = 0; i < N; i++)
-		{
-			visited[i] = false;
-			distance[i] = INT_MAX;
-		}
 
 		visited[0] = true;
 		distance[0] = 0;
@@ -61,7 +55,39 @@ public:
 				queue.push(v);
 			}
 		}
-		return min_path;
+
+		reversedBFS(distance);
+		reversedBFS(distance);
+
+		return distance[N-1];
+	}
+
+	void reversedBFS(vector<int> &distance)
+	{
+		queue<int> queue;
+		vector<bool> visited(N, false);
+
+
+		visited[N-1] = true;
+		queue.push(N-1);
+		while (!queue.empty())
+		{
+			int s = queue.front(); queue.pop();
+		
+			int min_d = INT_MAX;
+		
+			for (auto v : adj[s])
+			{
+				if (visited[v]) continue;
+				visited[v] = true;
+
+				min_d = min(min_d, distance[v]);
+
+				queue.push(v);
+			}
+
+			distance[s] = min_d + 1;
+		}
 	}
 };
 
