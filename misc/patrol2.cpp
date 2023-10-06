@@ -23,7 +23,7 @@ public:
 		adj[w].push_back(v);
 	}	
 
-	int BFS(int end, vector<int> C)
+	int BFS(int exit, vector<int> policepath)
 	{
 		queue<int> queue;
 		bool visited[N];
@@ -47,24 +47,18 @@ public:
 				if (visited[v]) continue;
 
 				distance[v] = distance[s] + 1;
-				int indiceguardia = (distance[v] % C.size());
-				bool celaguardia = (v == C[indiceguardia]);
+				int ipolice = (distance[v] % policepath.size());
+				bool occupied = (v == policepath[ipolice]);
 
-				if (celaguardia)
-				{
+				if (occupied)
 					distance[v]++;
-				}
 				
-				queue.push(v);
-
-				if (v == end)
-				{
+				if (v == exit)
 					min_path = min(min_path, distance[v]);
-				}
 				else
-				{
 					visited[v] = true;
-				}
+
+				queue.push(v);
 			}
 		}
 		return min_path;
