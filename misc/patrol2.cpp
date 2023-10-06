@@ -3,24 +3,18 @@
 #include <vector>
 #include <bits/stdc++.h>
 
-
-
 using namespace std;
 
 class Graph
 {
 public:
-	int N;
+	int N = 0;
 	vector<vector<int>> adj;
 
 	Graph(int n)
 	{
 		adj.resize(n);
-	}
-
-	void addVertex(int v)
-	{
-		adj[v] = vector<int>();
+		N = n;
 	}
 	
 	void addEdge(int v, int w)
@@ -29,16 +23,22 @@ public:
 		adj[w].push_back(v);
 	}	
 
-	int BFS(int x, int end, vector<int> C)
+	int BFS(int end, vector<int> C)
 	{
 		queue<int> queue;
 		bool visited[N];
 		int distance[N];
 		int min_path = INT_MAX;
 
-		visited[x] = true;
-		distance[x] = 0;
-		queue.push(x);
+		for (int i = 0; i < N; i++)
+		{
+			visited[i] = false;
+			distance[i] = INT_MAX;
+		}
+
+		visited[0] = true;
+		distance[0] = 0;
+		queue.push(0);
 		while (!queue.empty())
 		{
 			int s = queue.front(); queue.pop();
@@ -47,7 +47,7 @@ public:
 				if (visited[v]) continue;
 
 				distance[v] = distance[s] + 1;
-				int indiceguardia = (C.size() % distance[v]);
+				int indiceguardia = (distance[v] % C.size());
 				bool celaguardia = (v == C[indiceguardia]);
 
 				if (celaguardia)
@@ -71,13 +71,8 @@ public:
 	}
 };
 
-
-
 int main()
 {
-	// ifstream cin("input.txt");
-	// ofstream cout("output.txt");
-
 	int N, M, L;
 	cin >> N >> M >> L;
 
@@ -87,8 +82,13 @@ int main()
 	vector<int> C(L);
 	for (auto &x : C) cin >> x;
 
-	
+	Graph g = Graph(N);
+	for(int i = 0; i < M; i++)
+	{
+		g.addEdge(A[i], B[i]);
+	}
+	int m = g.BFS(N-1, C);
 
-	cout << 42 << endl;
+	cout << m << endl;
 	return 0;
 }
