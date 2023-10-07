@@ -1,56 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Graph
-{
-public:
-	int N;
-	vector<vector<int>> adj;
-
-	Graph(int n)
-	{
-		adj.resize(n);
-	}
-
-	void addVertex(int v)
-	{
-		adj[v] = vector<int>();
-	}
-	
-	void addEdge(int v, int w)
-	{
-		adj[v].push_back(w);
-		adj[w].push_back(v);
-	}
-
-	void BFS(int x)
-	{
-		queue<int> queue;
-		bool visited[N];
-		int distance[N];
-
-		visited[x] = true;
-		distance[x] = 0;
-		queue.push(x);
-		while (!queue.empty())
-		{
-			int s = queue.front(); queue.pop();
-			for (auto v : adj[s])
-			{
-				if (visited[v])
-					continue;
-
-				visited[v] = true;
-				distance[v] = distance[s] + 1;
-				queue.push(v);
-			}
-		}
-	}
-
-};
-
-
 typedef pair<int, int> p;
+
 class WeightedGraph
 {
 	int N;
@@ -94,3 +46,28 @@ public:
 		return dist;
 	}
 };
+
+int main()
+{
+	int V = 9;
+	WeightedGraph g(V);
+
+	g.addEdge(0, 1, 4);
+	g.addEdge(0, 7, 8);
+	g.addEdge(1, 2, 8);
+	g.addEdge(1, 7, 11);
+	g.addEdge(2, 3, 7);
+	g.addEdge(2, 8, 2);
+	g.addEdge(2, 5, 4);
+	g.addEdge(3, 4, 9);
+	g.addEdge(3, 5, 14);
+	g.addEdge(4, 5, 10);
+	g.addEdge(5, 6, 2);
+	g.addEdge(6, 7, 1);
+	g.addEdge(6, 8, 6);
+	g.addEdge(7, 8, 7);
+
+	g.dijkstra(0);
+
+	return 0;
+}
