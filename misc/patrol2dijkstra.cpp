@@ -24,29 +24,33 @@ public:
 	vector<int> dijkstra(int exit, vector<int> policepath)
 	{
 		priority_queue<p, vector<p>, greater<p>> q;
-		vector<int> distance(N, INT_MAX);
+		vector<int> distance(N, INT_MAX - 2);
+		vector<int> visited(N, false);
 
-		q.push(make_pair(0, 0));
+		visited[0] = true;
 		distance[0] = 0;
+		q.push(make_pair(0, 0));
 		while (!q.empty())
 		{
 			int s = q.top().second; q.pop();
 			for (auto node : adj[s])
-			{
+			{				
 				int v = (node).first;
 				int weight = (node).second;
 
+				if (visited[v]) continue;
+				visited[v] = true;
+
+				distance[v] = distance[s] + 1;
 				int ipolice = (distance[v] % policepath.size());
 				bool occupied = (v == policepath[ipolice]);
 
 				if (occupied)
-					weight++;
-
-				if (distance[v] > distance[s] + weight)
 				{
-					distance[v] = distance[s] + weight;
-					q.push(make_pair(distance[v], v));
+					distance[v]++;
 				}
+
+				q.push(make_pair(distance[v], v));
 			}
 		}
 		return distance;
