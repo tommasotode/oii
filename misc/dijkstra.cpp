@@ -9,10 +9,11 @@ typedef pair<int, int> p;
 
 class WeightedGraph
 {
+public:
+
 	int N;
 	vector<vector<p>> adj;
 
-public:
 	WeightedGraph(int n)
 	{
 		adj = vector<vector<p>>(n);
@@ -64,11 +65,12 @@ int main()
 	WeightedGraph g = WeightedGraph(N);
 	for(int i = 0; i < M; i++)
 	{
-		g.addEdge(0, 1, 0);
+		g.adj[A[i]-1].push_back(make_pair(B[i]-1, C[i]));
+		g.adj[B[i]-1].push_back(make_pair(A[i]-1, C[i]));
 	}
 	auto m = g.dijkstra(0);
 	
-	cout << m[e-1] << endl;
+	cout << m[e] << endl;
 
 	return 0;
 }
