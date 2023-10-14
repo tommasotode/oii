@@ -2,15 +2,13 @@
 #include <iostream>
 #include <vector>
 
+#include <bits/stdc++.h>
+
+
 using namespace std;
 
 int salta(int N, vector<int> S, vector<int> A, vector<int> B);
 
-
-
-#include <bits/stdc++.h>
-
-using namespace std;
 
 typedef pair<int, int> p;
 
@@ -23,7 +21,7 @@ public:
 
 	WeightedDirectedGraph(int n)
 	{
-		adj = vector<vector<p>>(n);
+		adj = vector<vector<p>>(n+1);
 		N = n;
 	}
 
@@ -35,12 +33,12 @@ public:
 	vector<int> dijkstra(int src)
 	{
 		priority_queue<p, vector<p>, greater<p>> q;
-		vector<int> dist(N, INT_MAX);
-		int max_height = 0;
+		vector<int> maxh(N+1, INT_MAX);
+		vector<int> prev(N+1);
 
 
 		q.push(make_pair(0, src));
-		dist[src] = 0;
+		maxh[src] = 0;
 		while (!q.empty())
 		{
 			int s = q.top().second; q.pop();
@@ -49,18 +47,32 @@ public:
 				int v = (node).first;
 				int weight = (node).second;
 
-				if (dist[v] > dist[s] + weight)
+				if (maxh[v] > weight)
 				{
-					dist[v] = dist[s] + weight;
-					
-					q.push(make_pair(dist[v], v));
+					maxh[v] = weight;
+					q.push(make_pair(maxh[v], v));
+					prev[v] = s;
 				}
 			}
 		}
-		return dist;
+		return prev;
 	}
 };
  
+int shortest(vector<int> prev, int target)
+{
+	vector<int> path;
+	int tmp = target;
+	path.push_back(tmp);
+	while (tmp != 0)
+	{
+		tmp = prev[tmp];
+		path.push_back(tmp);
+	}
+
+	return *max_element(path.begin(), path.end());
+}
+
 
 int salta(int N, vector<int> S, vector<int> A, vector<int> B)
 {
@@ -77,16 +89,16 @@ int salta(int N, vector<int> S, vector<int> A, vector<int> B)
 			g.addEdge(i, i+j, S[i]);
 		}
 	}
-	return 42;
-}
 
+	auto x = g.dijkstra(0);
+	return shortest(x, N);
+}
 
 
 int main()
 {
 	cin.tie(0);
 	ios_base::sync_with_stdio(0);
-	// Uncomment the following lines if you want to read or write from files
 	// ifstream cin("input.txt");
 	// ofstream cout("output.txt");
 
