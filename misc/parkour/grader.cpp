@@ -1,27 +1,21 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-
 #include <bits/stdc++.h>
-
-
 using namespace std;
 
 int salta(int N, vector<int> S, vector<int> A, vector<int> B);
 
-
 typedef pair<int, int> p;
-
 class WeightedDirectedGraph
 {
 public:
-
 	int N;
 	vector<vector<p>> adj;
 
 	WeightedDirectedGraph(int n)
 	{
-		adj = vector<vector<p>>(n+1);
+		adj = vector<vector<p>>(n);
 		N = n;
 	}
 
@@ -33,15 +27,14 @@ public:
 	vector<int> dijkstra(int src)
 	{
 		priority_queue<p, vector<p>, greater<p>> q;
-		vector<int> maxh(N+1, INT_MAX);
-		vector<int> prev(N+1);
+		vector<int> maxh(N, INT_MAX);
+		vector<int> prev(N);
 
-
-		q.push(make_pair(0, src));
-		maxh[src] = 0;
+		maxh[0] = adj[0][0].second;
+		q.push(make_pair(src, maxh[0]));
 		while (!q.empty())
 		{
-			int s = q.top().second; q.pop();
+			int s = q.top().first; q.pop();
 			for (auto node : adj[s])
 			{
 				int v = (node).first;
@@ -50,17 +43,16 @@ public:
 				if (maxh[v] > weight)
 				{
 					maxh[v] = weight;
-					q.push(make_pair(maxh[v], v));
+					q.push(make_pair(v, maxh[v]));
 					prev[v] = s;
 				}
 			}
 		}
 		return prev;
 	}
-};
- 
-int shortest(vector<int> prev, int target)
-{
+
+	int shortest(vector<int> &prev, int target, vector<int> &S)
+	{
 	vector<int> path;
 	int tmp = target;
 	path.push_back(tmp);
@@ -70,13 +62,22 @@ int shortest(vector<int> prev, int target)
 		path.push_back(tmp);
 	}
 
-	return *max_element(path.begin(), path.end());
-}
-
+	int m = 0;
+	for (auto i : path)
+	{
+		if (S[i] > m)
+		{
+			m = S[i];
+		}
+	}
+	return m;
+	}
+};
+ 
 
 int salta(int N, vector<int> S, vector<int> A, vector<int> B)
 {
-	WeightedDirectedGraph g = WeightedDirectedGraph(N);
+	WeightedDirectedGraph g = WeightedDirectedGraph(N+1);
 	
 	for (int i = 0; i < N; i++)
 	{
@@ -91,7 +92,7 @@ int salta(int N, vector<int> S, vector<int> A, vector<int> B)
 	}
 
 	auto x = g.dijkstra(0);
-	return shortest(x, N);
+	return g.shortest(x, N, S);
 }
 
 

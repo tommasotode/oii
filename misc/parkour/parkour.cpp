@@ -3,15 +3,13 @@
 using namespace std;
 
 typedef pair<int, int> p;
-
-class WeightedGraph
+class WeightedDirectedGraph
 {
 public:
-
 	int N;
 	vector<vector<p>> adj;
 
-	WeightedGraph(int n)
+	WeightedDirectedGraph(int n)
 	{
 		adj = vector<vector<p>>(n);
 		N = n;
@@ -20,39 +18,62 @@ public:
 	void addEdge(int u, int v, int weight)
 	{
 		adj[u].push_back(make_pair(v, weight));
-		adj[v].push_back(make_pair(u, weight));
 	}
 
 	vector<int> dijkstra(int src)
 	{
 		priority_queue<p, vector<p>, greater<p>> q;
-		vector<int> dist(N, INT_MAX);
+		vector<int> maxh(N, INT_MAX);
+		vector<int> prev(N);
 
-		q.push(make_pair(0, src));
-		dist[src] = 0;
+		maxh[0] = adj[0][0].second;
+		q.push(make_pair(src, maxh[0]));
 		while (!q.empty())
 		{
-			int s = q.top().second; q.pop();
+			int s = q.top().first; q.pop();
 			for (auto node : adj[s])
 			{
 				int v = (node).first;
 				int weight = (node).second;
 
-				if (dist[v] > dist[s] + weight)
+				if (maxh[v] > weight)
 				{
-					dist[v] = dist[s] + weight;
-					q.push(make_pair(dist[v], v));
+					maxh[v] = weight;
+					q.push(make_pair(v, maxh[v]));
+					prev[v] = s;
 				}
 			}
 		}
-		return dist;
+		return prev;
+	}
+
+	int shortest(vector<int> &prev, int target, vector<int> &S)
+	{
+	vector<int> path;
+	int tmp = target;
+	path.push_back(tmp);
+	while (tmp != 0)
+	{
+		tmp = prev[tmp];
+		path.push_back(tmp);
+	}
+
+	int m = 0;
+	for (auto i : path)
+	{
+		if (S[i] > m)
+		{
+			m = S[i];
+		}
+	}
+	return m;
 	}
 };
  
 
 int salta(int N, vector<int> S, vector<int> A, vector<int> B)
 {
-	WeightedGraph g = WeightedGraph(N);
+	WeightedDirectedGraph g = WeightedDirectedGraph(N+1);
 	
 	for (int i = 0; i < N; i++)
 	{
@@ -62,8 +83,10 @@ int salta(int N, vector<int> S, vector<int> A, vector<int> B)
 
 		for (int j = mi; j <= ma; j++)
 		{
-			g.addEdge(i, i+j, S[i+j]);
+			g.addEdge(i, i+j, S[i]);
 		}
 	}
-	return 42;
+
+	auto x = g.dijkstra(0);
+	return g.shortest(x, N, S);
 }
