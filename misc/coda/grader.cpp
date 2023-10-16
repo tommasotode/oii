@@ -38,6 +38,42 @@ vector<int> cucina(int N, int K, int X, vector<int> H)
 }
 
 
+vector<int> cucina(int N, int K, int X, vector<int> H)
+{
+	vector<int> R(X);
+
+
+
+	vector<int> timings = vector<int>(X, 0);
+	for(auto student : H)
+	{
+		timings[student]++;
+	}
+
+
+	int coda = 0;
+	int res = 0;
+
+	// ordinata
+	for (auto quant : timings)
+	{
+		// K = capienza
+		if (quant > (K - coda))
+		{
+			coda += (K - coda);
+		}
+		coda--; if (coda != 0) res++;
+	}
+
+	for (int i = 0; i < X; i++)
+	{
+		int cont = 0;
+		R[i] = cont;
+	}
+
+	return R;
+}
+
 int main()
 {
 	// freopen("input.txt", "r", stdin);
