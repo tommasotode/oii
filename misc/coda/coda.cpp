@@ -5,30 +5,29 @@ vector<int> cucina(int N, int K, int X, vector<int> H)
 {
 	vector<int> R(X);
 
-	sort(H.begin(), H.end());
-
-	queue<int> q;
+	vector<int> timings = vector<int>(X, 0);
+	for(auto student : H)
+	{
+		timings[student]++;
+	}
 
 	for (int i = 0; i < X; i++)
 	{
-		int cont = 0;
-		q = queue<int>();
-		for (int second = i; second < X; second++)
+		int coda = 0, res = 0;
+		for (int sec = i; sec < X; sec++)
 		{
-			for (int student : H)
+			if (timings[sec] > (K - coda))
+				coda += (K - coda);
+			else
+				coda += timings[sec];
+
+			if (coda != 0)
 			{
-				if (second == student)
-				{
-					q.push(student);
-				}
+				coda--;	res++;
 			}
-			
-			if (q.size() > 0)
-			{
-				q.pop(); cont++;
-			}
+
 		}
-		R[i] = cont;
+		R[i] = res;
 	}
 
 	return R;
