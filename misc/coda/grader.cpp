@@ -13,19 +13,23 @@ vector<int> cucina(int N, int K, int X, vector<int> H)
 		timings[student]++;
 	}
 
-	int capacita = 0;
-	if (timings[X-1] == 0) capacita++;
+	int liberi = 0;
+	if (timings[X-1] == 0) liberi++;
 	else R[X-1] = 1;
 
 	for (int sec = X-2; sec >= 0; sec--)
 	{
-		capacita++;
+		liberi++;
 		if (timings[sec] > 0)
 		{
-			int p = min(capacita, timings[sec]);
+			int p = min(liberi, timings[sec]);
 
 			R[sec] = R[sec+1] + min(p, K);
-			capacita = 0;
+			
+			if (liberi - R[sec] >= 0)
+				liberi = liberi - R[sec];
+			else
+				liberi = 0;
 		}
 		else
 		{

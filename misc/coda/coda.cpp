@@ -20,15 +20,14 @@ vector<int> cucina(int N, int K, int X, vector<int> H)
 		capacita++;
 		if (timings[sec] > 0)
 		{
-			// cosi funziona ma non considero il limite
-			// considerando il limite funziona però 
-			// il limite deve essere aggiornato
-			// devo sottrarre al limite la coda attuale
-			int potrei = min(capacita, timings[sec]);
-			int massimo = K;
+			int p = min(capacita, timings[sec]);
 
-			R[sec] = R[sec+1] + min(potrei, massimo);
-			capacita = 0;
+			R[sec] = R[sec+1] + min(p, K);
+			
+			if (capacita - R[sec] >= 0)
+				capacita = capacita - R[sec];
+			else
+				capacita = 0;
 		}
 		else
 		{
