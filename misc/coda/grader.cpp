@@ -13,23 +13,32 @@ vector<int> cucina(int N, int K, int X, vector<int> H)
 		timings[student]++;
 	}
 
-	int liberi = 0;
-	if (timings[X-1] == 0) liberi++;
-	else R[X-1] = 1;
+	int coda = 0;
+	if (timings[X-1] > 0)
+	{
+		R[X-1] = 1;
+		coda = min(K, timings[X-1]);
+	}
 
 	for (int sec = X-2; sec >= 0; sec--)
 	{
-		liberi++;
+		if (coda > 0)
+		{
+			coda--;
+		}
+		
 		if (timings[sec] > 0)
 		{
-			int p = min(liberi, timings[sec]);
-
-			R[sec] = R[sec+1] + min(p, K);
-			
-			if (liberi - R[sec] >= 0)
-				liberi = liberi - R[sec];
+			if (timings[sec] > (K - coda))
+			{
+				R[sec] = R[sec+1] + (K - coda);
+				coda += (K - coda);
+			}
 			else
-				liberi = 0;
+			{
+				R[sec] = R[sec+1] + timings[sec];
+				coda += timings[sec];
+			}
 		}
 		else
 		{
@@ -39,6 +48,21 @@ vector<int> cucina(int N, int K, int X, vector<int> H)
 
 	return R;
 }
+
+
+
+//1023
+
+
+//301220
+
+//liberi = 1 + 1
+//2 ++
+//coda = 2
+//coda --
+// all'indice 3 coda è uguale a 1
+// io sia per il limite che per 
+
 
 int main()
 {
