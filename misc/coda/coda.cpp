@@ -6,34 +6,39 @@ vector<int> cucina(int N, int K, int X, vector<int> H)
 	vector<int> R(X, 0);
 
 	vector<int> timings = vector<int>(X, 0);
-	for(auto student : H)
-	{
+	for (auto student : H)
 		timings[student]++;
+
+	int coda = 0;
+	if (timings[X - 1] > 0)
+	{
+		R[X - 1] = 1;
+		coda = min(K, timings[X - 1]);
+		coda--;
 	}
 
-	int capacita = 0;
-	if (timings[X-1] == 0) capacita++;
-	else R[X-1] = 1;
-
-	for (int sec = X-2; sec >= 0; sec--)
+	for (int sec = X - 2; sec >= 0; sec--)
 	{
-		capacita++;
 		if (timings[sec] > 0)
 		{
-			int p = min(capacita, timings[sec]);
-
-			R[sec] = R[sec+1] + min(p, K);
-			
-			if (capacita - R[sec] >= 0)
-				capacita = capacita - R[sec];
+			if (timings[sec] > (K - coda))
+			{
+				R[sec] = R[sec + 1] + (K - coda);
+				coda += (K - coda);
+			}
 			else
-				capacita = 0;
+			{
+				R[sec] = R[sec + 1] + timings[sec];
+				coda += timings[sec];
+			}
+
+			if (coda > 0)
+				coda--;
 		}
 		else
 		{
-			R[sec] = R[sec+1];
+			R[sec] = R[sec + 1];
 		}
 	}
-
 	return R;
 }

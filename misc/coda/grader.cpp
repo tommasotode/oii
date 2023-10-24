@@ -8,60 +8,42 @@ vector<int> cucina(int N, int K, int X, vector<int> H)
 	vector<int> R(X, 0);
 
 	vector<int> timings = vector<int>(X, 0);
-	for(auto student : H)
-	{
+	for (auto student : H)
 		timings[student]++;
-	}
 
 	int coda = 0;
-	if (timings[X-1] > 0)
+	if (timings[X - 1] > 0)
 	{
-		R[X-1] = 1;
-		coda = min(K, timings[X-1]);
+		R[X - 1] = 1;
+		coda = min(K, timings[X - 1]);
+		coda--;
 	}
 
-	for (int sec = X-2; sec >= 0; sec--)
+	for (int sec = X - 2; sec >= 0; sec--)
 	{
-		if (coda > 0)
-		{
-			coda--;
-		}
-		
 		if (timings[sec] > 0)
 		{
 			if (timings[sec] > (K - coda))
 			{
-				R[sec] = R[sec+1] + (K - coda);
+				R[sec] = R[sec + 1] + (K - coda);
 				coda += (K - coda);
 			}
 			else
 			{
-				R[sec] = R[sec+1] + timings[sec];
+				R[sec] = R[sec + 1] + timings[sec];
 				coda += timings[sec];
 			}
+
+			if (coda > 0)
+				coda--;
 		}
 		else
 		{
-			R[sec] = R[sec+1];
+			R[sec] = R[sec + 1];
 		}
 	}
-
 	return R;
 }
-
-
-
-//1023
-
-
-//301220
-
-//liberi = 1 + 1
-//2 ++
-//coda = 2
-//coda --
-// all'indice 3 coda è uguale a 1
-// io sia per il limite che per 
 
 
 int main()
