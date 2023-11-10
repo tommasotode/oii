@@ -1,69 +1,67 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <vector>
-#define MAXN 100000
+#include <bits/stdc++.h>
 using namespace std;
+#define MAXM 200000
 
-struct nodo
+typedef struct
 {
-	bool calc;
-	float p;									
-	int t;
-	vector<struct nodo *> prev;
-} nodes[MAXN];
+	float value;
+	int left;
+} node;
 
-int n, m, p, i, a, b, mam, inde;
-
-void calculate(nodo &a)
+int waterslide(int N, int M, int P, int A[], int B[])
 {
-	if (a.calc)
-		return;
-	for (int i = 0; i < a.prev.size(); i++)
+	node nodes[N] = {};
+	nodes[0].value = 1;
+	unordered_multimap<int, int> slides(M);
+	for (int i = 0; i < M; i++)
 	{
-		calculate(*(a.prev[i]));
-		a.p += (float)(a.prev[i]->p) / (float)(a.prev[i]->t);
-	}
-	a.calc = true;
-	return;
-}
-
-int main()
-{
-	FILE *fr, *fw;
-
-	fr = fopen("input.txt", "r");
-	fw = fopen("output.txt", "w");
-
-	fscanf(fr, "%d %d %d", &n, &m, &p);
-
-	for (i = 0; i < m; i++)
-	{
-		fscanf(fr, "%d %d", &a, &b);
-		nodes[b].prev.push_back(&nodes[a]);
-		nodes[a].t++;
+		slides.insert({A[i], B[i]});
+		nodes[B[i]].left++;
 	}
 
-	nodes[0].p = 1;
-	nodes[0].calc = true;
-
-	for (i = n - p; i < n; i++)
+	queue<int> queue({0});
+	while (queue.size() > 0)
 	{
-		calculate(nodes[i]);
-	}
+		int v = queue.front(); queue.pop();
 
-	for (i = n - p; i < n; i++)
-	{
-		if (mam < nodes[i].p)
+		float split = nodes[v].value / slides.count(v);
+		for (auto [it, end] = slides.equal_range(v); it != end; it++)
 		{
-			mam = nodes[i].p;
-			inde = i;
+			node &next = nodes[it->second];
+			next.value += split;
+			if (--next.left == 0)
+				queue.push(it->second);
 		}
 	}
 
-	fprintf(fw, "%d", inde);
+	int best = N - P;
+	for (int i = best + 1; i < N; i++)
+	{
+		if (nodes[i].value > nodes[best].value)
+			best = i;
+	}
+	return best;
+}
 
-	fclose(fr);
-	fclose(fw);
+int A[MAXM];
+int B[MAXM];
+
+int main()
+{
+	int N, M, P;
+
+	//  ifstream cin("input.txt");
+	//  ofstream cout("output.txt");
+	ios::sync_with_stdio(false);
+	cin >> N >> M >> P;
+
+	for (int i = 0; i < M; i++)
+	{
+		cin >> A[i] >> B[i];
+	}
+	int r = waterslide(N, M, P, A, B);
+
+	cout << r << endl;
 
 	return 0;
 }
