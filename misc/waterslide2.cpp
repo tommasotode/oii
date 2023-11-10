@@ -10,6 +10,7 @@ public:
 
 	Graph(int n)
 	{
+		N = n;	
 		adj.resize(n);
 	}
 
@@ -47,15 +48,23 @@ public:
 				if (v < s) continue;
 
 				distance[v] += (float)(distance[s] / cont);
-				distance[s] = 0.0f;
 				if (v < N - P)
 				{
 					// piscina
 					queue.push(v);
 				}
 			}
+			distance[s] = 0.0f;
+
 		}
 
+		for (int i = 0; i < distance.size(); i++)
+		{
+			if (i < N - P)
+			{
+				distance[i] = 0.0f;
+			}
+		}
 		int maxIndex = max_element(distance.begin(), distance.end()) - distance.begin();
 		return maxIndex;
 	}
@@ -70,8 +79,7 @@ int find_pool(int N, int M, int P, int A[], int B[])
 	}
 
 	int a = g.BFS(0, P);
-
-	return 4;
+	return a;
 }
 
 int A[MAXM];
@@ -79,17 +87,20 @@ int B[MAXM];
 
 int main()
 {
-	FILE *fr, *fw;
-	int N, M, P, i;
+	int N, M, P;
 
-	fr = fopen("input.txt", "r");
-	fw = fopen("output.txt", "w");
-	assert(3 == fscanf(fr, "%d %d %d", &N, &M, &P));
-	for (i = 0; i < M; i++)
-		assert(2 == fscanf(fr, "%d %d", &A[i], &B[i]));
+	//  ifstream cin("input.txt");
+	//  ofstream cout("output.txt");
+	ios::sync_with_stdio(false);
+	cin >> N >> M >> P;
 
-	fprintf(fw, "%d\n", find_pool(N, M, P, A, B));
-	fclose(fr);
-	fclose(fw);
+	for (int i = 0; i < M; i++)
+	{
+		cin >> A[i] >> B[i];
+	}
+	int r = find_pool(N, M, P, A, B);
+
+	cout << r << endl;
+
 	return 0;
 }
