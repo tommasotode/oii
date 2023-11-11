@@ -9,6 +9,7 @@ public:
 
 	Graph(int n)
 	{
+		N = n;
 		adj.resize(n);
 	}
 
@@ -59,8 +60,8 @@ class WeightedGraph
 public:
 	WeightedGraph(int n)
 	{
-		adj.resize(n);
 		N = n;
+		adj.resize(n);
 	}
 
 	void addEdge(int u, int v, int weight)

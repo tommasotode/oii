@@ -36,10 +36,8 @@ int waterslide(int N, int M, int P, int A[], int B[])
 
 	int best = N - P;
 	for (int i = best + 1; i < N; i++)
-	{
 		if (nodes[i].value > nodes[best].value)
 			best = i;
-	}
 	return best;
 }
 
