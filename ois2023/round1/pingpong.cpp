@@ -6,18 +6,18 @@ vector<pair<int, int>> solve(int A, int B)
 {
 	vector<pair<int, int>> matches(5);
 	match_count = 1;
-	if (B > 52) return { {-1, -1} };
+	if (B > 52)
+		return {{-1, -1}};
 
 	matches[0].first = 11;
-	matches[1].first = 11; // primi 2 vinti
+	matches[1].first = 11;
 	A -= 33;
 	if (A == 0)
 	{
-		// 3 di seguito vinte
+		// 0 match vinti da B
 		match_count = 3;
 		matches[2].first = 11;
 
-		// ora bisogna riempire B con numeri minori di 10
 		for (int i = 0; i < 3; i++)
 		{
 			int remaining = min(B, 10);
@@ -27,16 +27,16 @@ vector<pair<int, int>> solve(int A, int B)
 	}
 	else if (A < 10)
 	{
-		// bisogno che B vinca 1 partita in mezzo
+		// 1 match vinto da B
 		match_count = 4;
-		if (B < 11) return { {-1, -1} };
-		
-		matches[3].first = 11; // ultimo match
-		matches[2].first = A; // match in mezzo
-		matches[2].second = 11; // partita vinta da B
+		if (B < 11)
+			return {{-1, -1}};
+
+		matches[3].first = 11;
+		matches[2].first = A;
+		matches[2].second = 11;
 
 		B -= 11;
-		// ora bisogna riempire B in 0, 1, e 3 con quello che rimane
 		for (int i = 0; i < 3; i++)
 		{
 			int remaining = min(B, 10);
@@ -49,20 +49,19 @@ vector<pair<int, int>> solve(int A, int B)
 	}
 	else
 	{
-		// bisogno che B vinca 2 partite in mezzo
+		// 2 match vinti da B
 		match_count = 5;
-		if (B < 22) return { {-1, -1} };
-		
-		matches[4].first = 11; // ultimo match
-		matches[2].first = 10; // primo match intermedio
+		if (B < 22)
+			return {{-1, -1}};
+
+		matches[4].first = 11;
+		matches[2].first = 10;
 		A -= 10;
-		matches[3].first = A; // secondo match intermedio
-		
-		matches[2].second = 11; // primo match vinto da B
-		matches[3].second = 11; // secondo match vinto da B
+		matches[3].first = A;
+		matches[2].second = 11;
+		matches[3].second = 11;
 
 		B -= 22;
-		// ora bisogna riempire B in 0, 1, e 4 con quello che rimane
 		for (int i = 0; i < 3; i++)
 		{
 			int remaining = min(B, 10);
@@ -73,7 +72,6 @@ vector<pair<int, int>> solve(int A, int B)
 				matches[i].second = remaining;
 		}
 	}
-
 	return matches;
 }
 
