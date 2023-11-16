@@ -1,6 +1,82 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+int match_count;
+vector<pair<int, int>> solve(int A, int B)
+{
+	vector<pair<int, int>> matches(5);
+	match_count = 1;
+	if (B > 52) return { {-1, -1} };
+
+	matches[0].first = 11;
+	matches[1].first = 11; // primi 2 vinti
+	A -= 33;
+	if (A == 0)
+	{
+		// 3 di seguito vinte
+		match_count = 3;
+		matches[2].first = 11;
+
+		// ora bisogna riempire B con numeri minori di 10
+		for (int i = 0; i < 3; i++)
+		{
+			int remaining = min(B, 10);
+			B = max(B - remaining, 0);
+			matches[i].second = remaining;
+		}
+	}
+	else if (A < 10)
+	{
+		// bisogno che B vinca 1 partita in mezzo
+		match_count = 4;
+		if (B < 11) return { {-1, -1} };
+		
+		matches[3].first = 11; // ultimo match
+		matches[2].first = A; // match in mezzo
+		matches[2].second = 11; // partita vinta da B
+
+		B -= 11;
+		// ora bisogna riempire B in 0, 1, e 3 con quello che rimane
+		for (int i = 0; i < 3; i++)
+		{
+			int remaining = min(B, 10);
+			B = max(B - remaining, 0);
+			if (i == 2)
+				matches[3].second = remaining;
+			else
+				matches[i].second = remaining;
+		}
+	}
+	else
+	{
+		// bisogno che B vinca 2 partite in mezzo
+		match_count = 5;
+		if (B < 22) return { {-1, -1} };
+		
+		matches[4].first = 11; // ultimo match
+		matches[2].first = 10; // primo match intermedio
+		A -= 10;
+		matches[3].first = A; // secondo match intermedio
+		
+		matches[2].second = 11; // primo match vinto da B
+		matches[3].second = 11; // secondo match vinto da B
+
+		B -= 22;
+		// ora bisogna riempire B in 0, 1, e 4 con quello che rimane
+		for (int i = 0; i < 3; i++)
+		{
+			int remaining = min(B, 10);
+			B = max(B - remaining, 0);
+			if (i == 2)
+				matches[4].second = remaining;
+			else
+				matches[i].second = remaining;
+		}
+	}
+
+	return matches;
+}
+
 int main()
 {
 	ifstream cin("input.txt");
@@ -12,127 +88,13 @@ int main()
 	{
 		int A, B;
 		cin >> A >> B;
-		int C = -1, D = -1;
 
-		vector<pair<int, int>> arr(5);
-		bool error = false;
-		int match = 0;
-
-		if (B > 52)
-			error = true;
-
-		arr[0].first = 11;
-		arr[1].first = 11;
-		
-		if (A == 0)
-		{
-			// 3 di seguito vinte
-			match = 3;
-			arr[2].first = 11;
-			if (B > 10)
-			{
-				arr[0].second = 10;
-				B -= 10;
-				if (B > 10)
-				{
-					arr[1].second = 10;
-					B -= 10;
-					if (B == 10)
-						arr[2].second = 10;
-					else
-						arr[2].second = B;
-				}
-				else
-					arr[1].second = B;
-			}
-			else
-				arr[0].second = B;
-		}
-
-		else if (A > 10)
-		{
-			// bisogno che B vinca 2 partite in mezzo
-			match = 5;
-			if (B < 22)
-			{
-				error = true;
-			}
-			else
-			{
-				arr[4].first = 11;
-
-				arr[2].first = 10; arr[2].second = 11;
-
-				arr[3].first = A - 10; arr[3].second = 11;
-
-				B -= 22;
-				if (B > 10)
-				{
-					arr[0].second = 10;
-					B -= 10;
-					if (B > 10)
-					{
-						arr[1].second = 10;
-						B -= 10;
-						if (B == 10)
-							arr[4].second = 10;
-						else
-							arr[4].second = B;
-					}
-					else
-						arr[1].second = B;
-				}
-				else
-					arr[0].second = B;
-				}
-		}
-		else
-		{
-			// bisogno che B vinca 1 partita in mezzo
-			match = 4;
-			if (B < 11)
-			{
-				error = true;
-			}
-			else
-			{
-				arr[2].first = A;
-				arr[2].second = 11;
-				arr[3].first = 11;
-
-				B -= 11;
-				if (B > 10)
-				{
-					arr[0].second = 10;
-					B -= 10;
-					if (B > 10)
-					{
-						arr[1].second = 10;
-						B -= 10;
-						if (B == 10)
-							arr[3].second = 10;
-						else
-							arr[3].second = B;
-					}
-					else
-						arr[1].second = B;
-				}
-				else
-					arr[0].second = B;
-				}
-			}
-
-		if (error == true)
-		{
+		vector<pair<int, int>> r = solve(A, B);
+		if (r[0].first == -1)
 			cout << -1 << " " << -1 << endl;
-		}
 		else
-		{
-			for (int i = 0; i < match; i++)
-			{
-				cout << arr[i].first << " " << arr[i].second << endl;
-			}
-		}
+			for (int i = 0; i < match_count; i++)
+				cout << r[i].first << " " << r[i].second << endl;
 	}
 
 	return 0;
