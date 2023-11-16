@@ -11,33 +11,26 @@ int main()
     vector<int> P(N);
     for (int i = 0; i < N; ++i) cin >> P[i];
 
+    uint64_t sum = 0;
+    uint64_t prod = N * K;
+    for (int i = 0; i < N; i++) sum += P[i];
+
     int ans = 0;
-    long long int sum = reduce(P.begin(), P.end());
-    
-    if (sum < N*K)
-        ans = 1;
-
-    else if (sum > N*K)
+    if (sum < prod) ans = 1;
+    else if (sum > prod)
     {
-        long long int sottrarre = sum - N*K;
+        sort(P.begin(), P.end());
+        uint64_t to_remove = sum - prod;
 
-        int cont = 0;
-        while (sottrarre > 0)
+        int i = 0;
+        for (i; i < N; i++)
         {
-            cont++;
-            auto m = max_element(P.begin(), P.end());
-            int indexMax = m - P.begin();
-            int max = *m;
-
-            if (sottrarre <= max - 1)
+            if (to_remove <= P[i] - 1)
                 break;
             else
-            {
-                sottrarre -= max - 1;
-                P[indexMax] = 0;
-            }
+                to_remove -= P[i] - 1;
         }
-        ans = cont;
+        ans = i + 1;
     }
 
     cout << ans << endl;
