@@ -12,39 +12,73 @@ vector<pair<int, int>> solve(int A, int B)
 	matches[0].first = 11;
 	matches[1].first = 11;
 	A -= 33;
-	if (A == 0)
+	if (A == 0 )
 	{
-		// 0 match vinti da B
-		match_count = 3;
-		matches[2].first = 11;
-
-		for (int i = 0; i < 3; i++)
+		if (B > 30)
 		{
-			int remaining = min(B, 10);
-			B = max(B - remaining, 0);
-			matches[i].second = remaining;
+			// almeno 1 vinto da B forzato
+			match_count = 4;
+			matches[3].first = 11;
+			matches[2].first = 0;
+			matches[0].second = matches[1].second = matches[3].second = 10;
+			matches[2].second = 11;
+		}
+		else if (B > 41)
+		{
+			// almeno 2 vinti da B forzati
+			match_count = 5;
+			matches[4].first = 11;
+			matches[2].first = matches[3].first = 0;
+			matches[0].second = matches[1].second = matches[4].second = 10;
+			matches[2].second = matches[3].second = 11;
+		}
+		else
+		{
+			// 3 match vinti da A
+			match_count = 3;
+			matches[2].first = 11;
+
+			for (int i = 0; i < 3; i++)
+			{
+				int remaining = min(B, 10);
+				B = max(B - remaining, 0);
+				matches[i].second = remaining;
+			}
 		}
 	}
 	else if (A < 10)
 	{
-		// 1 match vinto da B
-		match_count = 4;
-		if (B < 11)
-			return {{-1, -1}};
-
-		matches[3].first = 11;
-		matches[2].first = A;
-		matches[2].second = 11;
-
-		B -= 11;
-		for (int i = 0; i < 3; i++)
+		if (B > 41)
 		{
-			int remaining = min(B, 10);
-			B = max(B - remaining, 0);
-			if (i == 2)
-				matches[3].second = remaining;
-			else
-				matches[i].second = remaining;
+			// almeno 2 vinti da B forzati
+			match_count = 5;
+			matches[4].first = 11;
+			matches[2].first = A;
+			matches[3].first = 0;
+			matches[0].second = matches[1].second = matches[4].second = 10;
+			matches[2].second = matches[3].second = 11;
+		}
+		else
+		{
+			// 1 match vinto da B
+			match_count = 4;
+			if (B < 11)
+				return {{-1, -1}};
+
+			matches[3].first = 11;
+			matches[2].first = A;
+			matches[2].second = 11;
+
+			B -= 11;
+			for (int i = 0; i < 3; i++)
+			{
+				int remaining = min(B, 10);
+				B = max(B - remaining, 0);
+				if (i == 2)
+					matches[3].second = remaining;
+				else
+					matches[i].second = remaining;
+			}
 		}
 	}
 	else
