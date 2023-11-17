@@ -3,48 +3,51 @@ using namespace std;
 
 #define MAXN 100000 + 1
 #define MAXK 20 + 1
-#define MAXT 1000 + 1
 
-int *T, *C;
 int N, K;
+int *T, *C;
+
+int dp[MAXN][MAXK];
 
 int cct(int i, int k)
 {
 	if (i > N)
-	{
-		return T[i];
-	}
-	
-	bool canSkip;
-	canSkip = (k >= K);
+		return 0;
 
-	int notSkipped = T[i] + cct(i+1, k+C[i]);
+	if (dp[i][k] != -1)
+		return dp[i][k];
+
+	int notSkipped = T[i] + cct(i + 1, min(K, k + C[i]));
 
 	int skipped = INT_MAX;
-	if (canSkip)
-	{
-		skipped = T[i] + cct(i+1, 0);
-	}
+	if (k >= K)
+		skipped = cct(i + 1, 0);
 
-	return min(notSkipped, skipped);
+	return dp[i][k] = min(notSkipped, skipped);
 }
 
-int solve(int N, int K, int *T, int *C)
+long long int solve()
 {
+	for (int n = 0; n < MAXN; n++)
+		for (int k = 0; k < MAXK; k++)
+			dp[n][k] = -1;
 
-	return 42;
+	return cct(0, 0);
 }
 
 int main()
 {
 	FILE *fr = stdin, *fw = stdout;
 	assert(fscanf(fr, "%d %d", &N, &K));
+
 	T = new int[N];
 	C = new int[N];
-	
-	for (int i = 0; i < N; i++) assert(fscanf(fr, "%d", T + i) == 1);
-	for (int i = 0; i < N; i++) assert(fscanf(fr, "%d", C + i) == 1);
-	fprintf(fw, "%d", solve(N, K, T, C));
+	for (int i = 0; i < N; i++)
+		assert(fscanf(fr, "%d", T + i) == 1);
+	for (int i = 0; i < N; i++)
+		assert(fscanf(fr, "%d", C + i) == 1);
+
+	fprintf(fw, "%d", solve());
 	delete[] T;
 	delete[] C;
 	return 0;
