@@ -13,33 +13,27 @@ public:
 		adj.resize(n);
 	}
 
-	void addVertex(int v)
-	{
-		adj[v] = vector<int>();
-	}
-	
 	void addEdge(int v, int w)
 	{
 		adj[v].push_back(w);
 		adj[w].push_back(v);
 	}
 
-	void BFS(int x)
+	void BFS(int start)
 	{
-		queue<int> queue;
 		bool visited[N];
 		int distance[N];
-
-		visited[x] = true;
-		distance[x] = 0;
-		queue.push(x);
+		queue<int> queue;
+		visited[start] = true;
+		distance[start] = 0;
+		queue.push(start);
 		while (!queue.empty())
 		{
-			int s = queue.front(); queue.pop();
-			for (auto v : adj[s])
+			int s = queue.front();
+			queue.pop();
+			for (auto &v : adj[s])
 			{
-				if (visited[v])
-					continue;
+				if (visited[v]) continue;
 
 				visited[v] = true;
 				distance[v] = distance[s] + 1;
@@ -47,17 +41,15 @@ public:
 			}
 		}
 	}
-
 };
-
 
 typedef pair<int, int> p;
 class WeightedGraph
 {
+public:
 	int N;
 	vector<vector<p>> adj;
 
-public:
 	WeightedGraph(int n)
 	{
 		N = n;
@@ -70,28 +62,28 @@ public:
 		adj[v].push_back(make_pair(u, weight));
 	}
 
-	vector<int> dijkstra(int src)
+	void dijkstra(int start)
 	{
+		bool visited[N];
+		int dist[N];
 		priority_queue<p, vector<p>, greater<p>> q;
-		vector<int> dist(N, INT_MAX);
 
-		q.push(make_pair(0, src));
-		dist[src] = 0;
+		dist[start] = 0;
+		q.push({start, 0});
 		while (!q.empty())
 		{
-			int s = q.top().second; q.pop();
-			for (auto node : adj[s])
-			{
-				int v = (node).first;
-				int weight = (node).second;
+			int node = q.top().first; q.pop();
 
-				if (dist[v] > dist[s] + weight)
-				{
-					dist[v] = dist[s] + weight;
-					q.push(make_pair(dist[v], v));
-				}
+			if (visited[node]) continue;
+			visited[node] = true;
+
+			for (auto &x : adj[node])
+			{
+				if (dist[x.first] <= dist[node] + x.second) continue;
+
+				dist[x.first] = dist[node] + x.second;
+				q.push({dist[x.first], x.first});
 			}
 		}
-		return dist;
 	}
 };
