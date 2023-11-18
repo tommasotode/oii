@@ -15,10 +15,10 @@ bool ordina(int N, vector<int> V, vector<int> &L)
         piccolo = min(V[i], piccolo);
         if (V[i] > piccolo || i == N)
         {
-            L.push_back(i-j);
+            L.push_back(i - j);
             piccolo = V[i];
 
-            for (int x = j; x<i; x++)
+            for (int x = j; x < i; x++)
             {
                 tmp.push_back(V[x]);
             }
