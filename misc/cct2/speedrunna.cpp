@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define MAXN 1000 + 1
-#define MAXK 50 + 1
+#define MAXN 1000000
+#define MAXK 50
 
 int N, K, a, b;
 int dp[MAXN][MAXK];
@@ -42,8 +42,8 @@ int speedrunna(int N_, int K_, int a_, int b_)
 {
 	N = N_; K = K_; a = a_; b = b_;
 
-	for (int i = 0; i < MAXN; i++)
-		for (int j = 0; j < MAXK; j++)
+	for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= K; j++)
 			dp[i][j] = -1;
 
 	return cct(0, 0);
