@@ -11,7 +11,7 @@ int dp[MAXN][MAXK];
 
 int cct(int i, int k)
 {
-	if (i > N)
+	if (i == N)
 		return 0;
 
 	if (dp[i][k] != -1)
@@ -20,7 +20,7 @@ int cct(int i, int k)
 	int notSkipped = T[i] + cct(i + 1, min(K, k + C[i]));
 
 	int skipped = INT_MAX;
-	if (k >= K)
+	if (k == K)
 		skipped = cct(i + 1, 0);
 
 	return dp[i][k] = min(notSkipped, skipped);

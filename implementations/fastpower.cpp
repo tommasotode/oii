@@ -17,14 +17,14 @@ int power(int base, unsigned int exp)
 		return base * tmp * tmp;
 }
 
-uint64_t module_power(uint64_t base, uint64_t exp, uint64_t mod)
+int module_power(int base, int exp, int mod)
 {
 	if (exp == 0)
 		return 1;
 	if (exp == 1)
 		return base;
 
-	uint64_t temp = module_power(base, exp / 2, mod);
+	int temp = module_power(base, exp / 2, mod);
 	if (exp % 2 == 0)
 		return (temp % mod * temp % mod) % mod;
 	else

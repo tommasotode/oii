@@ -3,6 +3,10 @@ using namespace std;
 
 int N, K, a, b;
 
+#define MAXN 1000000 + 1
+#define MAXK 50 + 1
+int dp[MAXN][MAXK];
+
 int mod_power(int base, int exp, int mod)
 {
 	if (exp == 0)
@@ -19,8 +23,10 @@ int mod_power(int base, int exp, int mod)
 
 int cct(int i, int k)
 {
-	if (i > N)
+	if (i == N)
 		return 0;
+
+	if (dp[i][k] != -1) return dp[i][k];
 
 	int notSkipped = mod_power(a, i, 1000) + cct(i + 1, min(K, k + mod_power(b, i, K)));
 
@@ -28,11 +34,17 @@ int cct(int i, int k)
 	if (k == K)
 		skipped = cct(i + 1, 0);
 
-	return min(notSkipped, skipped);
+	return dp[i][k] = min(notSkipped, skipped);
 }
 
-int speedrunna()
+int speedrunna(int N_, int K_, int a_, int b_)
 {
+	N = N_; K = K_; a = a_; b = b_;
+
+	for(int i = 0; i < MAXN; i++)
+		for (int j = 0; j < MAXK; j++)
+			dp[i][j] = -1;
+
 	int r = cct(0, 0);
 	return r;
 }
@@ -40,5 +52,5 @@ int speedrunna()
 int main()
 {
 	cin >> N >> K >> a >> b;
-	cout << speedrunna();
+	cout << speedrunna(N, K, a, b);
 }
