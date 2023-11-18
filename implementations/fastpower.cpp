@@ -30,3 +30,19 @@ int module_power(int base, int exp, int mod)
 	else
 		return (base % mod * temp % mod * temp % mod) % mod;
 }
+
+
+// this is way better, still have to understand this
+int mod_power(int base, int exp, int mod)
+{
+	int res = 1;
+	base %= mod;
+	while (exp > 0)
+	{
+		if (exp & 1) // 1 if odd, 0 if even
+			res = res * base % mod;
+		base = base * base % mod;
+		exp >>= 1; // divide by 2
+	}
+	return res;
+}
