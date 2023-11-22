@@ -5,24 +5,25 @@ int N, K;
 int *T, *C;
 
 int cct_bottom_up()
-{
-	int dp[N + 1][K + 1];
-	for (int i = 0; i <= K; i++)
-		dp[N][i] = 0;
+{	
+	int base_dp[K+1];
+	int curr_dp[K+1];
+	for (int i = 0; i <= K; i++) base_dp[i] = 0;
 
 	for (int i = N - 1; i >= 0; i--)
 	{
 		for (int k = 0; k <= K; k++)
 		{
-			int notSkipped = T[i] + dp[i + 1][min(K, k + C[i])];
+			int notSkipped = T[i] + base_dp[min(K, k + C[i])];
 			int skipped = INT_MAX;
 			if (k == K)
-				skipped = dp[i + 1][0];
+				skipped = base_dp[0];
 
-			dp[i][k] = min(notSkipped, skipped);
+			curr_dp[k] = min(skipped, notSkipped);
 		}
+		memcpy(base_dp, curr_dp, sizeof(curr_dp));
 	}
-	return dp[0][0];
+	return curr_dp[0];
 }
 
 long long int solve()
