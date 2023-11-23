@@ -23,9 +23,11 @@ int cct_bottom_up()
 
 	for (int i = N - 1; i >= 0; i--)
 	{
+		int time = mod_power(a, i, 1000);
+		int charge = mod_power(b, i, K);
 		for (int k = 0; k <= K; k++)
 		{
-			int notSkipped = mod_power(a, i, 1000) + dp[(i+1)%2][min(K, k + mod_power(b, i, K))];
+			int notSkipped = time + dp[(i+1)%2][min(K, k + charge)];
 			int skipped = INT_MAX;
 			if (k == K)
 				skipped = dp[(i+1)%2][0];
