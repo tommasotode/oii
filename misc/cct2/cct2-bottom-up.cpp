@@ -18,23 +18,22 @@ int mod_power(int base, int exp, int mod)
 
 int cct_bottom_up()
 {	
-	int base_dp[K+1]; int curr_dp[K+1];
-	for (int i = 0; i <= K; i++) base_dp[i] = 0;
+	int dp[2][K+1];
+	for (int i = 0; i <= K; i++) dp[0][i] = 0;
 
 	for (int i = N - 1; i >= 0; i--)
 	{
 		for (int k = 0; k <= K; k++)
 		{
-			int notSkipped = mod_power(a, i, 1000) + base_dp[min(K, k + mod_power(b, i, K))];
+			int notSkipped = mod_power(a, i, 1000) + dp[(i+1)%2][min(K, k + mod_power(b, i, K))];
 			int skipped = INT_MAX;
 			if (k == K)
-				skipped = base_dp[0];
+				skipped = dp[(i+1)%2][0];
 
-			curr_dp[k] = min(skipped, notSkipped);
+			dp[i%2][k] = min(skipped, notSkipped);
 		}
-		memcpy(base_dp, curr_dp, sizeof(curr_dp));
 	}
-	return curr_dp[0];
+	return dp[0][0];
 }
 
 int speedrunna(int N_, int K_, int a_, int b_)
