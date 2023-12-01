@@ -22,11 +22,13 @@ class DSU
 public:
 	int N;
 	vector<int> parent;
+	vector<int> rank;
 
 	DSU(int n)
 	{
 		N = n;
 		parent = vector<int>(N);
+		rank = vector<int>(N,0);
 		for (int i = 0; i < N; i++)
 			parent[i] = i;
 	}
@@ -44,7 +46,13 @@ public:
 		b = find_set(b);
 		if (a != b)
 		{
+			if (rank[a] < rank[b])
+				swap(a, b);
+			
 			parent[b] = a;
+			
+			if (rank[a] == rank[b])
+				rank[a]++;
 		}
 	}
 };
@@ -58,21 +66,6 @@ int main()
 	cin >> R >> C >> N;
 	vector<int> rr(N), cc(N);
 	for (int i = 0; i < N; ++i) cin >> rr[i] >> cc[i];
-
-
-	// per ogni pezzo guardo i suoi vicini
-	// ogni pezzo fa union ai suoi vicini
-	
-	// for ogni pezzo
-	// 	  for ogni pezzochecoincide con pezzo
-	//      	union(pezzo, pezzocoincide)
-
-	// alla fine ripasso per parent
-	// trovo il numero di numeri distinti che ci sono dentro
-	
-	// for ogni elemento di parent
-	// 		if find(pezzo) not in giavisti
-	// 			numero++
 
 	DSU dsu = DSU(N);
 	for (int curr = 0; curr < N; curr++)
@@ -91,7 +84,7 @@ int main()
 	// find the number of connected components
 	unordered_set<int> s;
 	for (int i = 0; i < N; i++)
-		s.insert(dsu.find_set(i));
+		s.insert(dsu.parent[i]);
 
 	int res = mod_power(2, s.size(), MOD);
 	cout << res << endl;
