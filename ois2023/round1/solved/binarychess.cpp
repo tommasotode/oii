@@ -22,13 +22,13 @@ class DSU
 public:
 	int N;
 	vector<int> parent;
-	vector<int> rank;
+	vector<int> size;
 
 	DSU(int n)
 	{
 		N = n;
 		parent = vector<int>(N);
-		rank = vector<int>(N,0);
+		size = vector<int>(N, 1);
 		for (int i = 0; i < N; i++)
 			parent[i] = i;
 	}
@@ -46,13 +46,11 @@ public:
 		b = find_set(b);
 		if (a != b)
 		{
-			if (rank[a] < rank[b])
+			if (size[a] < size[b])
 				swap(a, b);
 			
 			parent[b] = a;
-			
-			if (rank[a] == rank[b])
-				rank[a]++;
+			size[a] += size[b];
 		}
 	}
 };
