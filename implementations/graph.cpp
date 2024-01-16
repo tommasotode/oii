@@ -72,8 +72,8 @@ public:
 		q.push({start, 0});
 		while (!q.empty())
 		{
-			int node = q.top().first; q.pop();
-
+			int node = q.top().first;
+			q.pop();
 			if (visited[node]) continue;
 			visited[node] = true;
 
@@ -82,7 +82,7 @@ public:
 				if (dist[x.first] <= dist[node] + x.second) continue;
 
 				dist[x.first] = dist[node] + x.second;
-				q.push({dist[x.first], x.first});
+				q.push({x.first, dist[x.first]});
 			}
 		}
 	}

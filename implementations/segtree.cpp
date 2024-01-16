@@ -11,8 +11,8 @@ typedef struct Node
 class MaxSegmentTree
 {
 	private:
-		vector<int> tree;
 		Node root;
+		vector<int> tree;
 
 		void build(vector<int>& data, Node node)
 		{
@@ -32,8 +32,7 @@ class MaxSegmentTree
 
 		int get_max(Node node, int l, int r)
 		{
-			if (l > r)
-				return INT_MIN;	// da cambiare in base alla query
+			if (l > r) return INT_MIN;
 			
 			if (node.left == l && node.right == r)
 				return tree[node.index];
@@ -71,14 +70,14 @@ class MaxSegmentTree
 		}
 		
 	public:
-		vector<int> d;
 		int n;
+		vector<int> data;
 
 		MaxSegmentTree(vector<int>& data)
 		{
 			n = data.size();
 			tree.resize(n*4);
-			d = data;
+			this->data = data;
 			root = {1, 0, n-1};
 			build(data, root);
 		}

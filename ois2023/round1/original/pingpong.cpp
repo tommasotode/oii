@@ -22,7 +22,7 @@ int main()
 		matches[0].first = 11;
 		matches[1].first = 11;
 		matches[2].first = 11;
-		
+
 		for (int i = 0; i < 3; i++)
 		{
 			int remaining = min(B, 10);

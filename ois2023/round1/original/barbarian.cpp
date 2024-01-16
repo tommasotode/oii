@@ -1,5 +1,3 @@
-// NOTE: it is recommended to use this even if you don't understand the following code.
-
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -7,49 +5,60 @@
 
 using namespace std;
 
-int main() {
-    // uncomment the two following lines if you want to read/write from files
-    ifstream cin("input.txt");
-    // ofstream cout("output.txt");
+int main()
+{
+	ifstream cin("input.txt");
+	// ofstream cout("output.txt");
 
-    int N;
-    cin >> N;
+	int N;
+	cin >> N;
 
-    vector<long long> D(N);
-    for (int i = 0; i < N; i++)
-        cin >> D[i];
+	vector<long long> D(N);
+	for (int i = 0; i < N; i++)
+		cin >> D[i];
 
-    // INSERT YOUR CODE HERE
-    for (int i = 0; i < N; i++) {
-        bool visited[N] = {};
-        int curr = i;
-        while (true) {
-            visited[curr] = true;
+	// INSERT YOUR CODE HERE
+	for (int i = 0; i < N; i++)
+	{
+		bool visited[N] = {};
+		int curr = i;
+		while (true)
+		{
+			visited[curr] = true;
 
-            int left = curr - 1;
-            for (; left >= 0; left--) {
-                if (!visited[left]) break;
-            }
+			int left = curr - 1;
+			for (; left >= 0; left--)
+			{
+				if (!visited[left])
+					break;
+			}
 
-            int right = curr + 1;
-            for (; right < N; right++) {
-                if (!visited[right]) break;
-            }
+			int right = curr + 1;
+			for (; right < N; right++)
+			{
+				if (!visited[right])
+					break;
+			}
 
-            if (left == -1) {
-                if (right == N) break;
-                curr = right;
-            } else {
-                if (right == N) {
-                    curr = left;
-                    continue;
-                }
-                curr = abs(D[left] - D[curr]) <= abs(D[right] - D[curr]) ? left : right;
-            }
-        }
-        cout << curr << ' ';
-    }
-    cout << endl;
+			if (left == -1)
+			{
+				if (right == N)
+					break;
+				curr = right;
+			}
+			else
+			{
+				if (right == N)
+				{
+					curr = left;
+					continue;
+				}
+				curr = abs(D[left] - D[curr]) <= abs(D[right] - D[curr]) ? left : right;
+			}
+		}
+		cout << curr << ' ';
+	}
+	cout << endl;
 
-    return 0;
+	return 0;
 }

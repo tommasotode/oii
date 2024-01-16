@@ -3,12 +3,8 @@ using namespace std;
 
 int power(int base, unsigned int exp)
 {
-	if (exp == 0)
-		return 1;
-	if (exp == 1)
-		return base;
-	if (exp == 2)
-		return base * base;
+	if (exp == 0) return 1;
+	if (exp == 1) return base;
 
 	int tmp = power(base, exp / 2);
 	if (exp % 2 == 0)
@@ -19,10 +15,8 @@ int power(int base, unsigned int exp)
 
 int module_power(int base, int exp, int mod)
 {
-	if (exp == 0)
-		return 1;
-	if (exp == 1)
-		return base;
+	if (exp == 0) return 1;
+	if (exp == 1) return base;
 
 	int temp = module_power(base, exp / 2, mod);
 	if (exp % 2 == 0)
@@ -31,8 +25,7 @@ int module_power(int base, int exp, int mod)
 		return (base % mod * temp % mod * temp % mod) % mod;
 }
 
-
-// this is way better, still have to understand this
+// don't actually know how this works
 int mod_power(int base, int exp, int mod)
 {
 	int res = 1;
@@ -42,7 +35,7 @@ int mod_power(int base, int exp, int mod)
 		if (exp & 1) // 1 if odd, 0 if even
 			res = res * base % mod;
 		base = base * base % mod;
-		exp >>= 1; // divide by 2
+		exp >>= 1;
 	}
 	return res;
 }
