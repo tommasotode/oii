@@ -44,13 +44,13 @@ public:
 };
 
 typedef pair<int, int> p;
-class WeightedGraph
+class WGraph
 {
 public:
 	int N;
 	vector<vector<p>> adj;
 
-	WeightedGraph(int n)
+	WGraph(int n)
 	{
 		N = n;
 		adj.resize(n);

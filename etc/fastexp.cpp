@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int power(int base, unsigned int exp)
+int power(int base, int exp)
 {
 	if (exp == 0) return 1;
 	if (exp == 1) return base;
@@ -25,14 +25,13 @@ int module_power(int base, int exp, int mod)
 		return (base % mod * temp % mod * temp % mod) % mod;
 }
 
-// don't actually know how this works
 int mod_power(int base, int exp, int mod)
 {
 	int res = 1;
 	base %= mod;
 	while (exp > 0)
 	{
-		if (exp & 1) // 1 if odd, 0 if even
+		if (exp & 1)
 			res = res * base % mod;
 		base = base * base % mod;
 		exp >>= 1;
