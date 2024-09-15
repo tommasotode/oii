@@ -6,33 +6,33 @@
 using namespace std;
 
 typedef long long ll;
+typedef pair<ll, ll> p;
 const ll INF = numeric_limits<ll>::max();
 
-vector<ll> dijkstra(int N, int source, const vector<vector<pair<int, int>>> &adj)
+vector<ll> dijkstra(ll N, ll src, const vector<vector<p>> &adj)
 {
+	priority_queue<p, vector<p>, greater<p>> pq;
 	vector<ll> dist(N + 1, INF);
-	dist[source] = 0;
 
-	priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<pair<ll, int>>> pq;
-	pq.push({0, source});
-
+	pq.push({0, src});
+	dist[src] = 0;
 	while (!pq.empty())
 	{
-		int u = pq.top().second;
+		ll s = pq.top().second;
 		ll d = pq.top().first;
 		pq.pop();
 
-		if (d > dist[u])
+		if (d > dist[s])
 			continue;
 
-		for (auto &edge : adj[u])
+		for (auto &edge : adj[s])
 		{
-			int v = edge.first;
-			int weight = edge.second;
+			ll v = edge.first;
+			ll weight = edge.second;
 
-			if (dist[u] + weight < dist[v])
+			if (dist[s] + weight < dist[v])
 			{
-				dist[v] = dist[u] + weight;
+				dist[v] = dist[s] + weight;
 				pq.push({dist[v], v});
 			}
 		}
@@ -41,20 +41,20 @@ vector<ll> dijkstra(int N, int source, const vector<vector<pair<int, int>>> &adj
 	return dist;
 }
 
-int main()
+ll main()
 {
 	ifstream cin("input.txt");
 	ofstream cout("output.txt");
-	int N, M;
+	ll N, M;
 	cin >> N >> M;
-	int s, d;
+	ll s, d;
 	cin >> s >> d;
 
-	vector<vector<pair<int, int>>> adj(N + 1);
+	vector<vector<p>> adj(N + 1);
 
-	for (int i = 0; i < M; i++)
+	for (ll i = 0; i < M; i++)
 	{
-		int u, v, weight;
+		ll u, v, weight;
 		cin >> u >> v >> weight;
 		adj[u].push_back({v, weight});
 	}
