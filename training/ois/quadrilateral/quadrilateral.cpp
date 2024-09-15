@@ -3,8 +3,6 @@ using namespace std;
 
 int main()
 {
-  ifstream cin("input.txt");
-
   int N;
   cin >> N;
 
