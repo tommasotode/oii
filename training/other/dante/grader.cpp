@@ -3,8 +3,11 @@ using namespace std;
 
 int rimembra(int N, int K, vector<int> V)
 {
-	int res = 0;
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
 
+	int res = 0;
 	int l = 0;
 	int zeros = 0;
 	for (int r = 0; r < N; r++)
