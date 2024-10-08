@@ -38,6 +38,6 @@ int main()
     for (int i = 0; i < N; i++)
         cin >> L[i];
 
-    cout << shortestSegmentWithAllColors(N, C, L) << endl;
+    cout << sliding(N, C, L) << endl;
     return 0;
 }
