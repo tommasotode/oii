@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int shortestSegmentWithAllColors(int N, int C, const vector<int> &L)
+int sliding(int N, int C, const vector<int> &L)
 {
     int res = INT_MAX;
 
